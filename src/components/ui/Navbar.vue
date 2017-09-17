@@ -12,7 +12,7 @@
 
     <div class="nav-right">
       <span class="nav-item">
-        <a class="button add-item-btn"><i class="fa fa-plus"></i>&nbspAdd Item</a>
+        <router-link  class="button add-item-btn" :to="{ name: 'add'}"><i class="fa fa-plus"></i>&nbspAdd Item</router-link>
       </span>
       <span class="nav-item logout-btn">
         <a class="button">Logout</a>
