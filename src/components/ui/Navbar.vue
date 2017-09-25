@@ -14,17 +14,25 @@
       <span class="nav-item">
         <router-link  class="button add-item-btn" :to="{ name: 'add'}"><i class="fa fa-plus"></i>&nbspAdd Item</router-link>
       </span>
-      <span class="nav-item logout-btn">
-        <a class="button">Logout</a>
-      </span>
+      <!-- <span class="nav-item logout-btn"> -->
+        <!-- <router-link class="button" :to="{ name: 'register' }">Login</router-link> -->
+        <!-- </span> -->
+        <login></login>
+        <register></register>
     </div>
-
   </nav>
 </template>
 
 <script>
+import login from '../LoginLiz'
+import register from '../Register'
+
 export default {
-  name: 'navbar'
+  name: 'navbar',
+  components: {
+     login,
+     register
+ }
 }
 </script>
 
