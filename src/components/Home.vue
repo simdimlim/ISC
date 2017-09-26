@@ -2,7 +2,10 @@
   <div class="home">
     <navbar />
     <section class="section" style="padding-top:20px">
-      <div class="container">
+      <div class="container" style="padding-top:100px" v-if="currentUser.name == ''">
+        <three-dots></three-dots>
+      </div>
+      <div class="container" v-if="currentUser.name != ''">
         <h1 class="title">
           Hello <strong>{{currentUser.name}}</strong>
         </h1>
@@ -17,21 +20,31 @@
 <script>
 import navbar from './ui/Navbar'
 import sidebar from './ui/Sidebar'
+import firebase from 'firebase'
+import ThreeDots from 'vue-loading-spinner/src/components/ThreeDots'
 
 export default {
   name: 'home',
   components: {
       navbar,
-      sidebar
+      sidebar,
+      ThreeDots
   },
-  data () {
+  data: function() {
     return {
       currentUser: {
-          name: 'Temp',
+          name: '',
           photo: '',
       },
       myvar: ''
     }
+  },
+  created: function() {
+    var userId = firebase.auth().currentUser.uid;
+    return firebase.database().ref('/users/' + userId).once('value').then((snapshot) => {
+      var username = (snapshot.val() && snapshot.val().fname) || '';
+      this.currentUser.name = username
+    });
   }
 }
 </script>

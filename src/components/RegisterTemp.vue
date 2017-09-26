@@ -4,7 +4,13 @@
       <div class="column is-4 is-offset-4">
     <div class="login-form">
       <p class="control has-icon has-icon-right">
-        <input class="input" type="text" placeholder="Full Name" v-model="account.name">
+        <input class="input" type="text" placeholder="First Name" v-model="account.fname">
+        <span class="icon user" style="height:inherit;padding-top:6px">
+          <i class="fa fa-user"></i>
+        </span>
+      </p>
+      <p class="control has-icon has-icon-right">
+        <input class="input" type="text" placeholder="Last Name" v-model="account.lname">
         <span class="icon user" style="height:inherit;padding-top:6px">
           <i class="fa fa-user"></i>
         </span>
@@ -45,7 +51,12 @@ export default {
     register () {
       firebase.auth().createUserWithEmailAndPassword(this.account.email, this.account.password).then(
         (user) => {
-          alert ("Creating user with " + this.account.email + " "+ this.account.password)
+          var database = firebase.database();
+          let userId = user.uid
+          firebase.database().ref('users/' + userId).set({
+            fname: this.account.fname,
+            lname: this.account.lname,
+          });
           this.$router.replace('home')
         },
         (err) => {
