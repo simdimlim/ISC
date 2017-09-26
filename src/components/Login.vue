@@ -43,9 +43,9 @@
                       </span>
                     </p>
                     <p class="control login" style="text-align:center">
-                      <button class="button login-btn" @click="login()" style="width:100%">Login</button>
+                      <button class="button login-btn" v-on:click="login" style="width:100%">Login</button>
                       <br>or<br>
-                        <button class="button login-btn" @click="register()" style="width:100%">Register</button>
+                        <button class="button login-btn" v-on:click="register" style="width:100%">Register</button>
                     </p>
                   </div>
 <!--                   <div class="section forgot-password">
@@ -81,7 +81,7 @@ export default {
     login () {
       firebase.auth().signInWithEmailAndPassword(this.account.email, this.account.password).then(
         (user) => {
-          this.$router.replace('home')
+          this.$router.push('home')
         },
         (err) => {
           alert('Oops. ' + err.message)

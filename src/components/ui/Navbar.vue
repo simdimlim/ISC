@@ -14,13 +14,8 @@
       <span class="nav-item">
         <router-link  class="button add-item-btn" :to="{ name: 'add'}"><i class="fa fa-plus"></i>&nbspAdd Item</router-link>
       </span>
-      <button class="button add-item-btn" :@click="logout()">Logout</Button>
+      <button class="button" style="margin-top:8px;margin-right:10px" v-on:click="logout">Logout</Button>
 
-      <!-- <span class="nav-item logout-btn"> -->
-        <!-- <router-link class="button" :to="{ name: 'register' }">Login</router-link> -->
-        <!-- </span> -->
-        <login></login>
-        <register></register>
     </div>
   </nav>
 </template>

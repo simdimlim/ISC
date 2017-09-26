@@ -22,7 +22,7 @@
         </span>
       </p>
       <p class="control login" style="text-align:center">
-          <button class="button login-btn" @click="register()" style="width:100%">Register Account</button>
+          <button class="button login-btn" v-on:click="register" style="width:100%">Register Account</button>
       </p>
     </div>
   </div>

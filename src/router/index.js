@@ -10,14 +10,44 @@ import firebase from 'firebase'
 Vue.use(Router)
 
 let router = new Router({
+  mode: 'history',
   routes: [
-    { path: '*', redirect: '/login'},
-    { path: '/', redirect: '/login'},
-    { path: '/login', name: 'login', component: Login },
-    { path: '/home', name: 'home', component: Home, meta: { requiresAuth: true } },
-    { path: '/add-item', name: 'add', component: AddItem },
-    { path: '/new-item', name: 'new', component: NewItem },
-    { path: '/register', name: 'register', component: Register }
+    {
+      path: '*',
+      redirect: '/login'
+    },
+    {
+      path: '/',
+      redirect: '/login'
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: Login
+    },
+    {
+      path: '/home',
+      name: 'home',
+      component: Home,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/add-item',
+      name: 'add',
+      component: AddItem
+    },
+    {
+      path: '/new-item',
+      name: 'new',
+      component: NewItem
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: Register
+    }
   ]
 })
 
@@ -25,16 +55,9 @@ router.beforeEach((to, from, next) => {
   let currentUser = firebase.auth().currentUser;
   let requiresAuth = to.matched.some(record => record.meta.requiresAuth);
 
-  if (requiresAuth && !currentUser) {
-    next('login')
-
-  } else if (requiresAuth && currentUser) {
-    alert('to home')
-    next('home')
-  } else {
-    alert('to elsewhere ' + requiresAuth + " " + currentUser)
-    next()
-  }
+  if (requiresAuth && !currentUser) next('login')
+  else if (!requiresAuth && currentUser) next('home')
+  else next()
 })
 
 export default router
