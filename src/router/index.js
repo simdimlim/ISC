@@ -36,7 +36,10 @@ let router = new Router({
     {
       path: '/add-item',
       name: 'add',
-      component: AddItem
+      component: AddItem,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: '/new-item',

@@ -12,7 +12,7 @@
 
     <div class="nav-right">
       <span class="nav-item">
-        <router-link  class="button add-item-btn" :to="{ name: 'add'}"><i class="fa fa-plus"></i>&nbspAdd Item</router-link>
+        <router-link  class="button add-item-btn" :to="{ name: 'add'}" replace><i class="fa fa-plus"></i>&nbspAdd Item</router-link>
       </span>
       <button class="button" style="margin-top:8px;margin-right:10px" v-on:click="logout">Logout</Button>
 
