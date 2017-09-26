@@ -14,6 +14,16 @@ app.get('/hey', function (req, res) {
         'images_src': ['img@src'],
         'images_datasrc': ['img@data-src']
     })
+    .find('span')
+    .set({
+      'title':        'section > h2',
+      'description':  '#price',
+      'subcategory':  'div.breadbox > span[4]',
+      'date':         'time@datetime',
+      'latitude':     '#map@data-latitude',
+      'longitude':    '#map@data-longitude',
+      'images':       ['img@src']
+    })
     .data(function(data) {
         res.send(data);
     })
@@ -24,6 +34,8 @@ app.post('/scrape', function (req, res) {
     osmosis
     .get(req.body.link)
     .set({
+        title: 'title',
+        p: '.price',
         'images_src': ['img@src'],
         'images_datasrc': ['img@data-src']
     })

@@ -3,7 +3,7 @@
       <div class="modal-mask" @click="close">
          <div class="modal-wrapper">
             <div class="modal-container" @click.stop>
-               
+
                <div class="modal-body">
                   <label class="form-label">
                         <input class="form-control" type="text" placeholder="Email or Username" v-model="loginUser">
@@ -12,7 +12,7 @@
                         <input class="form-control" type="password" placeholder="Password" v-model="loginPassword">
                     </label>
                </div>
-               
+
                <div class="modal-footer text-right">
               <button class="button login-btn" @click="submit()">
                  <!-- make this a submit button instead of just closing the modal -->
@@ -26,6 +26,8 @@
 </template>
 
 <script>
+import firebase from 'firebase'
+
 export default {
    name: 'modal',
    data () {
@@ -41,9 +43,18 @@ export default {
          this.loginPassword = '';
       },
       submit: function () {
-      // Some submit logic goes here...
-      this.close();
-    }
+        console.log(this.loginUser + " ... " + this.loginPassword)
+        firebase.auth().signInWithEmailAndPassword(this.loginUser, this.loginPassword).then(
+          function(user) {
+            alert('Well done ! You are now connected')
+          },
+          function(err) {
+            alert('Oops. ' + err.message)
+          }
+        );
+        // Some submit logic goes here...
+        this.close();
+      }
    }
 }
 </script>

@@ -29,7 +29,8 @@ export default {
       currentUser: {
           name: 'Temp',
           photo: '',
-      }
+      },
+      myvar: ''
     }
   }
 }

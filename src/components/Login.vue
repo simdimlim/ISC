@@ -11,7 +11,7 @@
               </div>
             </div>
           </div>
-        </section>  
+        </section>
       </div>
       <div class="column is-4">
         <section class="hero is-fullheight">
@@ -25,24 +25,27 @@
             <div class="container">
               <div class="columns">
                 <div class="column is-8 is-offset-2">
+                  <!--
                   <h1 class="avatar has-text-centered section">
                     <img src="../assets/user.png">
-                  </h1>
+                  </h1>!-->
                   <div class="login-form">
                     <p class="control has-icon has-icon-right">
-                      <input class="input email-input" type="text" placeholder="hello@world.org" v-model="account.email">
-                      <span class="icon user">
-                        <i class="fa fa-user"></i>
+                      <input class="input email-input" type="text" placeholder="Email" v-model="account.email">
+                      <span class="icon user" style="height:inherit;padding-top:6px">
+                        <i class="fa fa-envelope-o"></i>
                       </span>
                     </p>
                     <p class="control has-icon has-icon-right">
-                      <input class="input password-input" type="password" placeholder="●●●●●●●●●" v-model="account.password">
-                      <span class="icon user">
+                      <input class="input password-input" type="password" placeholder="Password" v-model="account.password">
+                      <span class="icon user" style="height:inherit;padding-top:7px">
                         <i class="fa fa-lock"></i>
                       </span>
                     </p>
-                    <p class="control login">
-                      <button class="button is-success is-outlined is-large is-fullwidth" :disabled="submitDisable" @click.prevent="login">Login</button>
+                    <p class="control login" style="text-align:center">
+                      <button class="button login-btn" @click="login()" style="width:100%">Login</button>
+                      <br>or<br>
+                        <button class="button login-btn" @click="register()" style="width:100%">Register</button>
                     </p>
                   </div>
 <!--                   <div class="section forgot-password">
@@ -55,7 +58,7 @@
               </div>
             </div>
           </div>
-        </section>  
+        </section>
       </div>
     </div>
 
@@ -65,6 +68,8 @@
 <script>
 import "bulma/bulma.sass"
 import axios from 'axios'
+import firebase from 'firebase'
+
 export default {
   name: 'login',
   data () {
@@ -74,13 +79,17 @@ export default {
   },
   methods: {
     login () {
-      let url = 'http://localhost:3000/login'
-      axios.post(url, this.account).then(response => {
-        console.log('login success?')
-        this.$router.push('/')
-      }).catch(error => {
-        console.log(error)
-      })
+      firebase.auth().signInWithEmailAndPassword(this.account.email, this.account.password).then(
+        (user) => {
+          this.$router.replace('home')
+        },
+        (err) => {
+          alert('Oops. ' + err.message)
+        }
+      );
+    },
+    register () {
+      this.$router.replace('register')
     }
   },
   computed: {

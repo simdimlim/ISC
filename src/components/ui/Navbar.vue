@@ -14,6 +14,8 @@
       <span class="nav-item">
         <router-link  class="button add-item-btn" :to="{ name: 'add'}"><i class="fa fa-plus"></i>&nbspAdd Item</router-link>
       </span>
+      <button class="button add-item-btn" :@click="logout()">Logout</Button>
+
       <!-- <span class="nav-item logout-btn"> -->
         <!-- <router-link class="button" :to="{ name: 'register' }">Login</router-link> -->
         <!-- </span> -->
@@ -26,12 +28,20 @@
 <script>
 import login from '../LoginLiz'
 import register from '../Register'
+import firebase from 'firebase'
 
 export default {
   name: 'navbar',
   components: {
      login,
      register
+ },
+ methods: {
+   logout: function() {
+     firebase.auth().signOut().then(() => {
+       this.$router.replace('login')
+     })
+   }
  }
 }
 </script>

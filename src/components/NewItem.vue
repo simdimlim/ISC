@@ -18,7 +18,7 @@
           <div class="columns">
             <div class="column is-4" style="height:400px;overflow-y:auto">
               <ul id="example-1">
-                <li v-for="image in images">
+                <li v-for="image in item.images">
                   <img :src="image">
                 </li>
               </ul>
@@ -27,7 +27,7 @@
               <div class="field">
                 <label class="label">Name</label>
                 <div class="control">
-                  <input class="input" type="text" placeholder="Text input">
+                  <input class="input" type="text" placeholder="Text input" v-model="item.title">
                 </div>
               </div>
               <div class="field">
@@ -73,8 +73,11 @@ export default {
       currentUser: {
           name: 'Temp',
       },
+      item: {
+        images: [],
+        title: ''
+      },
       link: this.$route.query.url,
-      images: [],
       showLoader: true,
     }
   },
@@ -84,16 +87,20 @@ export default {
     })
     .then(response => {
 
+      console.log(response.data)
+      this.item.title = response.data.title
+
       var func = function(context, list) {
         console.log("Height: " + img.height + ", Width: " + img.width)
-        context.images.push(list[i])
+        context.item.images.push(list[i])
       };
 
       for (var i = 0; i < response.data.images_src.length; i++) {
         var img = new Image();
-        img.name = response.data.images_src[i]
-        img.onload = func(this,response.data.images_src);
-        img.src = response.data.images_src[i]
+        img.onload = function(){
+            console.log( this.width+' '+ this.height );
+        };
+        img.src = response.data.images_src[i];
       }
 
       this.showLoader = false;
