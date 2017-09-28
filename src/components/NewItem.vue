@@ -6,12 +6,12 @@
     <section class="section" style="padding-top:20px">
       <div class="container main-container">
 
-        <div class="container" v-if="showLoader">
+        <div class="container" v-if="item.images.length == 0">
           <p class="loader-text">Collecting details from link...</p><br>
           <three-dots></three-dots>
         </div>
 
-        <div class="container" v-if="!showLoader">
+        <div class="container" v-if="item.images.length != 0">
           <h1 class="title">
             <strong>Add Details</strong>
           </h1>
@@ -86,25 +86,33 @@ export default {
       link: this.link
     })
     .then(response => {
-
+      axios.post(`http://localhost:3000/filter`, {
+        data: response.data.images_src,
+        link: this.link
+      }).then(response => {
+        this.item.images = response.data.split(" ");
+        console.log(this.item.images)
+      }).catch(e => {
+        console.log(e)
+      })
+/*
       console.log(response.data)
       this.item.title = response.data.title
+      response.data.images_src.push.apply(response.data.images_src, response.data.images_datasrc)
 
-      var func = function(context, list) {
+      var func = function(context, list, img) {
         console.log("Height: " + img.height + ", Width: " + img.width)
         context.item.images.push(list[i])
       };
 
       for (var i = 0; i < response.data.images_src.length; i++) {
         var img = new Image();
-        img.onload = function(){
-            console.log( this.width+' '+ this.height );
-        };
+        img.onload = func(this, response.data.images_src, img)
         img.src = response.data.images_src[i];
       }
-
+*/
       this.showLoader = false;
-  //    this.images.push.apply(this.images, response.data.images_datasrc)
+  //
     })
     .catch(e => {
       //console.log(e)
@@ -118,8 +126,6 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .main-container {
-  padding-right: 15%;
-  padding-left: 15%;
 }
 .field {
   padding-top: 15px;

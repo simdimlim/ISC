@@ -1,23 +1,36 @@
 <template lang="html">
-  <nav class="nav has-shadow" >
+  <div>
+  <nav class="nav has-shadow" style="z-index: 950;" >
 
     <div class="nav-left">
       <router-link class="nav-item is-brand" to="/"><b>ISC</b></router-link>
       <router-link class="nav-item is-tab" to="/">Dashboard</router-link>
       <div class="field search-bar-field">
         <input class="input search-bar" placeholder="Search items...">
-          <a class="button add-item-btn"><i class="fa fa-search"></i></a>
+          <a class="button add-item-btn" ><i class="fa fa-search"></i></a>
       </div>
     </div>
 
     <div class="nav-right">
       <span class="nav-item">
-        <router-link  class="button add-item-btn" :to="{ name: 'add'}" replace><i class="fa fa-plus"></i>&nbspAdd Item</router-link>
+        <button  class="button add-item-btn" v-on:click="showAddItem = !showAddItem"><i class="fa fa-plus"></i>&nbspAdd Item</button>
       </span>
       <button class="button" style="margin-top:8px;margin-right:10px" v-on:click="logout">Logout</Button>
 
     </div>
   </nav>
+  <transition name="slide-fade">
+    <nav class="nav has-shadow" v-if="showAddItem" style="border-top: 1px solid #f5f5f5; height: 57px; padding-left:13px; z-index: 900;">
+
+      <div class="nav-left">
+        <div class="field search-bar-field" style="width: 95vw">
+          <input class="input add-bar" placeholder="Paste link here." v-on:keyup.enter="addItem" v-model="link">
+            <a class="button add-item-btn" v-on:click="addItem" ><i class="fa fa-search"></i></a>
+        </div>
+      </div>
+    </nav>
+  </transition>
+  </div>
 </template>
 
 <script>
@@ -36,6 +49,15 @@ export default {
      firebase.auth().signOut().then(() => {
        this.$router.replace('login')
      })
+   },
+   addItem: function(e) {
+     this.$router.push({path: 'new-item', query: { url: this.link }});
+   }
+ },
+ data () {
+   return {
+     showAddItem: false,
+     link: ''
    }
  }
 }
@@ -55,6 +77,9 @@ b {
 .search-bar {
     width: 30vw;
 }
+.add-bar {
+    width: 100%;
+}
 
 .add-item-btn {
   margin-right: 0px;
@@ -65,6 +90,18 @@ b {
 
 .logout-btn {
     margin-right: 10px
+}
+
+.slide-fade-enter-active {
+  transition: all .3s ease;
+}
+.slide-fade-leave-active {
+  transition: all .3s ease;
+}
+.slide-fade-enter, .slide-fade-leave-to
+/* .slide-fade-leave-active below version 2.1.8 */ {
+  transform: translateY(-10px);
+  opacity: 0;
 }
 
 .input.is-active, .input:active, .input:focus, .textarea.is-active, .textarea:active, .textarea:focus {

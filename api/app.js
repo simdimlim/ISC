@@ -2,6 +2,9 @@ var express = require('express');
 var app = express();
 var osmosis = require('osmosis');
 var bodyParser = require('body-parser')
+var probe = require('probe-image-size');
+var url = require('url');
+var sleep = require('system-sleep');
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
@@ -36,12 +39,36 @@ app.post('/scrape', function (req, res) {
     .set({
         title: 'title',
         p: '.price',
-        'images_src': ['img@src'],
-        'images_datasrc': ['img@data-src']
+        'images_src': ['img@src', 'img@data-src'],
     })
     .data(function(data) {
-        res.send(data);
+      res.send(data);
     })
+})
+
+
+app.post('/filter', function(req, res) {
+  res.setHeader('Content-Type', 'text/html');
+  for (let i = 0; i < req.body.data.length; i++) {
+    if (req.body.data[i].charAt(0) == '/' && req.body.data[i].charAt(1) != '/') {
+      var adr = req.body.link;
+      var q = url.parse(adr, true);
+      req.body.data[i] = q.protocol + "//" + q.host + req.body.data[i];
+    } else if (req.body.data[i].charAt(0) == '/' && req.body.data[i].charAt(1) == '/') {
+      req.body.data[i] = "https:" + req.body.data[i];
+    }
+    probe(req.body.data[i], (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        if ((result.height > 200 || result.width > 200) && (result.type == 'jpg' || result.type == 'png' || result.type == 'jpeg')) {
+          res.write(result.url + " ")
+        }
+      }
+    });
+  }
+  sleep(3000)
+  res.end()
 })
 
 
