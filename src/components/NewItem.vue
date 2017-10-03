@@ -3,7 +3,7 @@
 
     <navbar/>
 
-    <section class="section" style="padding-top:20px">
+    <section class="section" style="padding-top:20px;">
       <div class="container main-container">
 
         <div class="container" v-if="item.images.length == 0">
@@ -11,7 +11,7 @@
           <three-dots></three-dots>
         </div>
 
-        <div class="container" v-if="item.images.length != 0">
+        <div class="container" v-if="item.images.length != 0" style="padding-left:100px;padding-right:100px">
           <h1 class="title">
             <strong>Add Details</strong>
           </h1>
@@ -19,34 +19,37 @@
             <div class="column is-4" style="height:400px;overflow-y:auto">
               <ul id="example-1">
                 <li v-for="image in item.images">
-                  <img :src="image">
+                  <img :src="image" width="300">
                 </li>
               </ul>
             </div>
-            <div class="column" style="text-align:left">
+            <div class="column is-7" style="text-align:left">
               <div class="field">
                 <label class="label">Name</label>
                 <div class="control">
-                  <input class="input" type="text" placeholder="Text input" v-model="item.title">
+                  <input class="input" type="text" placeholder="" v-model="item.title">
                 </div>
               </div>
               <div class="field">
-                <label class="label">Price</label>
+                <label class="label">Price ($)</label>
                 <div class="control">
-                  <input class="input" type="text" placeholder="Text input">
+                  <input class="input" type="text" placeholder="" v-model="item.price">
                 </div>
               </div>
               <div class="field">
                 <label class="label">Category</label>
                 <div class="control">
                   <div class="select">
-                    <select>
+                    <select v-model="item.category">
                       <option>Select a category</option>
-                      <option>Fashion</option>
-                      <option>Technology</option>
+                      <option value="Fashion">Fashion</option>
+                      <option value="Technology">Technology</option>
                     </select>
                   </div>
                 </div>
+              </div>
+              <div class="field" style="padding-top:27px">
+                <input class="button" type="submit" v-on:click="addItem" value="Submit input">
               </div>
             </div>
           </div>
@@ -61,6 +64,7 @@ import navbar from './ui/Navbar'
 import sidebar from './ui/Sidebar'
 import axios from 'axios'
 import ThreeDots from 'vue-loading-spinner/src/components/ThreeDots'
+import firebase from 'firebase'
 
 export default {
   name: 'add',
@@ -75,7 +79,9 @@ export default {
       },
       item: {
         images: [],
-        title: ''
+        title: '',
+        price: '',
+        category: '',
       },
       link: this.$route.query.url,
       showLoader: true,
@@ -86,39 +92,33 @@ export default {
       link: this.link
     })
     .then(response => {
+      this.item.title = response.data.title;
       axios.post(`http://localhost:3000/filter`, {
         data: response.data.images_src,
         link: this.link
       }).then(response => {
         this.item.images = response.data.split(" ");
-        console.log(this.item.images)
       }).catch(e => {
         console.log(e)
       })
-/*
-      console.log(response.data)
-      this.item.title = response.data.title
-      response.data.images_src.push.apply(response.data.images_src, response.data.images_datasrc)
-
-      var func = function(context, list, img) {
-        console.log("Height: " + img.height + ", Width: " + img.width)
-        context.item.images.push(list[i])
-      };
-
-      for (var i = 0; i < response.data.images_src.length; i++) {
-        var img = new Image();
-        img.onload = func(this, response.data.images_src, img)
-        img.src = response.data.images_src[i];
-      }
-*/
       this.showLoader = false;
-  //
     })
     .catch(e => {
-      //console.log(e)
+      console.log(e)
     })
   },
   methods: {
+    addItem: function() {
+      let user = firebase.auth().currentUser;
+      var database = firebase.database();
+      let userId = user.uid/*
+      firebase.database().ref('users/' + userId + '/items').set({
+        title: this.item.title || '',
+        img: this.item.images[0] || '',
+        price: this.item.price || '',
+        category: this.item.category || '',
+      });*/
+    }
   }
 }
 </script>

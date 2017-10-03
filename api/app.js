@@ -38,7 +38,6 @@ app.post('/scrape', function (req, res) {
     .get(req.body.link)
     .set({
         title: 'title',
-        p: '.price',
         'images_src': ['img@src', 'img@data-src'],
     })
     .data(function(data) {
@@ -61,7 +60,7 @@ app.post('/filter', function(req, res) {
       if (err) {
         console.log(err);
       } else {
-        if ((result.height > 200 || result.width > 200) && (result.type == 'jpg' || result.type == 'png' || result.type == 'jpeg')) {
+        if ((result.height > 200 && result.width > 100) && (result.type == 'jpg' || result.type == 'png' || result.type == 'jpeg')) {
           res.write(result.url + " ")
         }
       }
