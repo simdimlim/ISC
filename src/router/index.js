@@ -6,6 +6,8 @@ import NewItem from '@/components/NewItem'
 import Login from '@/components/Login'
 import Register from '@/components/RegisterTemp'
 import firebase from 'firebase'
+import ItemCard from '@/components/ItemCard'
+
 
 Vue.use(Router)
 
@@ -53,7 +55,15 @@ let router = new Router({
       path: '/register',
       name: 'register',
       component: Register
-    }
+   },
+   {
+     path: '/card',
+     name: 'itemcard',
+     component: ItemCard,
+     meta: {
+      requiresAuth: true
+     }
+   }
   ]
 })
 
