@@ -13,7 +13,7 @@
 
     <div class="nav-right">
       <span class="nav-item">
-        <button  class="button add-item-btn" v-on:click="showAddItem = !showAddItem"><i class="fa fa-plus"></i>&nbspAdd Item</button>
+        <button  class="button add-item-btn" v-if="this.$route.path != '/new-item'" v-on:click="showAddItem = !showAddItem"><i class="fa fa-plus"></i>&nbspAdd Item</button>
       </span>
       <button class="button" style="margin-top:8px;margin-right:10px" v-on:click="logout">Logout</Button>
 
@@ -23,9 +23,9 @@
     <nav class="nav has-shadow" v-if="showAddItem" style="border-top: 1px solid #f5f5f5; height: 57px; padding-left:13px; z-index: 900;">
 
       <div class="nav-left">
-        <div class="field search-bar-field" style="width: 95vw">
+        <div class="field search-bar-field" style="width: 93vw">
           <input class="input add-bar" placeholder="Paste link here." v-on:keyup.enter="addItem" v-model="link">
-            <a class="button add-item-btn" v-on:click="addItem" ><i class="fa fa-search"></i></a>
+            <a class="button add-item-btn" v-on:click="addItem" >Save</a>
         </div>
       </div>
     </nav>
@@ -44,14 +44,17 @@ export default {
      login,
      register
  },
+ created: function() {
+   console.log(this.$route.path)
+ },
  methods: {
    logout: function() {
      firebase.auth().signOut().then(() => {
        this.$router.replace('login')
      })
    },
-   addItem: function(e) {
-     this.$router.push({path: 'new-item', query: { url: this.link }});
+   addItem: function() {
+     this.$router.replace({path: 'new-item', query: { url: this.link }});
    }
  },
  data () {
@@ -77,6 +80,7 @@ b {
 .search-bar {
     width: 30vw;
 }
+
 .add-bar {
     width: 100%;
 }
@@ -95,6 +99,7 @@ b {
 .slide-fade-enter-active {
   transition: all .3s ease;
 }
+
 .slide-fade-leave-active {
   transition: all .3s ease;
 }

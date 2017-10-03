@@ -2,12 +2,12 @@
   <div class="login">
     <div class="login-wrapper columns">
       <div class="column is-8 is-hidden-mobile hero-banner">
-        <section class="hero is-fullheight is-dark">
+        <section class="hero is-fullheight is-dark" style="background-color:#00d3d1">
           <div class="hero-body">
             <div class="container section" style="background-color: transparent;">
               <div class="has-text-right">
-                <h1 class="title is-1">Login</h1> <br>
-                <p class="title is-3">Please Enter Your Login Details</p>
+                <h1 class="title is-1">Integrated Shopping Cart</h1>
+                <p class="title is-3" style="font-size: 16px">Please enter your login details.</p>
               </div>
             </div>
           </div>
@@ -15,20 +15,10 @@
       </div>
       <div class="column is-4">
         <section class="hero is-fullheight">
-          <div class="hero-heading">
-            <div class="section has-text-centered">
-              <img src="../assets/icon1.png">
-              <p>ISC</p>
-            </div>
-          </div>
           <div class="hero-body">
             <div class="container">
               <div class="columns">
                 <div class="column is-8 is-offset-2">
-                  <!--
-                  <h1 class="avatar has-text-centered section">
-                    <img src="../assets/user.png">
-                  </h1>!-->
                   <div class="login-form">
                     <p class="control has-icon has-icon-right">
                       <input class="input email-input" type="text" placeholder="Email" v-model="account.email">
@@ -48,12 +38,6 @@
                         <button class="button login-btn" v-on:click="register" style="width:100%">Register</button>
                     </p>
                   </div>
-<!--                   <div class="section forgot-password">
-                    <p class="has-text-centered">
-                      <a href="#">Forgot password</a>
-                      <a href="#">Need help?</a>
-                    </p>
-                  </div> -->
                 </div>
               </div>
             </div>

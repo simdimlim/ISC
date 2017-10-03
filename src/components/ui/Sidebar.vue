@@ -1,32 +1,18 @@
 <template lang="html">
   <aside class="menu" style="text-align:left">
 
-    <p class="menu-label">General</p>
+    <p class="menu-label">Filter</p>
 
     <ul class="menu-list">
-      <li><a>Dashboard</a></li>
-      <li><a>Profile</a></li>
+      <li><a style="padding-left:0px">Dashboard</a></li>
+      <li><a style="padding-left:0px">Profile</a></li>
     </ul>
 
-    <p class="menu-label">My Lists</p>
+    <p class="menu-label">My Stores</p>
 
     <ul class="menu-list">
-      <li><a class="is-active">Gift List</a>
-        <ul>
-          <li><a>Public</a></li>
-          <li><a>Private</a></li>
-        </ul>
-      </li>
-      <li><a>My Events</a></li>
-      <li><a>Fund List</a></li>
-    </ul>
-
-    <p class="menu-label">Transactions</p>
-
-    <ul class="menu-list">
-      <li><a>Payments</a></li>
-      <li><a>Transfers</a></li>
-      <li><a>Balance</a></li>
+      <li><a style="padding-left:0px">Dashboard</a></li>
+      <li><a style="padding-left:0px">Profile</a></li>
     </ul>
 
   </aside>

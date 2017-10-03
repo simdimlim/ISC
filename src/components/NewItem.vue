@@ -42,8 +42,8 @@
                   <div class="select">
                     <select v-model="item.category">
                       <option>Select a category</option>
-                      <option value="Fashion">Fashion</option>
-                      <option value="Technology">Technology</option>
+                      <option>Fashion</option>
+                      <option>Technology</option>
                     </select>
                   </div>
                 </div>
@@ -98,6 +98,7 @@ export default {
         link: this.link
       }).then(response => {
         this.item.images = response.data.split(" ");
+        this.item.images.slice(0,5)
       }).catch(e => {
         console.log(e)
       })
@@ -111,13 +112,13 @@ export default {
     addItem: function() {
       let user = firebase.auth().currentUser;
       var database = firebase.database();
-      let userId = user.uid/*
+      let userId = user.uid
       firebase.database().ref('users/' + userId + '/items').set({
         title: this.item.title || '',
         img: this.item.images[0] || '',
         price: this.item.price || '',
         category: this.item.category || '',
-      });*/
+      });
     }
   }
 }
