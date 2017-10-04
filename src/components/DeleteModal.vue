@@ -40,6 +40,7 @@ export default {
     }
   },
   methods: {
+   //   going to have to archive these items in the future instead of actually removing from db
       deleteItem: function() {
          firebase.database().ref('users/' + this.userId + '/items/' + this.itemId).remove();
          this.$emit('close');
