@@ -1,5 +1,5 @@
 <template lang="html">
-  <aside class="menu" style="text-align:left">
+  <aside class="menu is-hidden-touch" style="text-align:left">
 
     <p class="menu-label">Search</p>
 
