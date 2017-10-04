@@ -58,4 +58,7 @@ export default {
 </script>
 
 <style scoped>
+.button.is-primary.is-outlined:hover, .button.is-primary.is-outlined:focus {
+  background-color: #00d3d1;
+}
 </style>
