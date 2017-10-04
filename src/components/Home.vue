@@ -242,4 +242,26 @@ export default {
 .menu-label {
   color: #00d3d1;
 }
+
+.select:not(.is-multiple)::after {
+    border: 1px solid #00d3d1;
+    border-right: 0;
+    border-top: 0;
+    content: " ";
+    display: block;
+    height: 0.5em;
+    pointer-events: none;
+    position: absolute;
+    transform: rotate(-45deg);
+    width: 0.5em;
+    margin-top: -0.375em;
+    right: 1.125em;
+    top: 50%;
+    z-index: 4;
+}
+
+.input:focus, .input.is-focused, .input:active, .input.is-active, .textarea:focus, .textarea.is-focused, .textarea:active, .textarea.is-active {
+    border-color: #00d3d1;
+    box-shadow: 0 0 0 0.125em rgba(0, 209, 178, 0.25);
+}
 </style>
