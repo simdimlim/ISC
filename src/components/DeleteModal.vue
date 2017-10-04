@@ -43,7 +43,6 @@ export default {
       deleteItem: function() {
          firebase.database().ref('users/' + this.userId + '/items/' + this.itemId).remove();
          this.$emit('close');
-         this.$router.go(this.$router.currentRoute);
       }
    }
 }
