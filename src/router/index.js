@@ -4,7 +4,7 @@ import Home from '@/components/Home'
 import AddItem from '@/components/AddItem'
 import NewItem from '@/components/NewItem'
 import Login from '@/components/Login'
-import Register from '@/components/RegisterTemp'
+import Register from '@/components/Register'
 import firebase from 'firebase'
 import ItemCard from '@/components/ItemCard'
 

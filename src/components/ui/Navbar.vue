@@ -34,16 +34,10 @@
 </template>
 
 <script>
-import login from '../LoginLiz'
-import register from '../Register'
 import firebase from 'firebase'
 
 export default {
   name: 'navbar',
-  components: {
-     login,
-     register
- },
  created: function() {
    console.log(this.$route.path)
  },
