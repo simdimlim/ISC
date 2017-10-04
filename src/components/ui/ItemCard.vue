@@ -24,7 +24,7 @@
               </a>
               <a class="button is-pulled-right" style="border:none;">
                  <span class="icon has-text-danger">
-                    <i class="fa fa-heart-o" v-on:mouseover="hovering = !hovering"></i>
+<!--                    <i class="fa fa-heart-o" v-on:mouseover="hovering = !hovering"></i> -->
                     <i class="fa fa-heart" v-if="hovering"></i>
                  </span>
               </a>

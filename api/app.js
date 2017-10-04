@@ -42,7 +42,7 @@ app.post('/scrape', function (req, res) {
     })
     .data(function(data) {
       res.send(data);
-    })
+    }).error(console.log)
 })
 
 

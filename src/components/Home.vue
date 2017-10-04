@@ -58,15 +58,7 @@
             <ul class="menu-list" style="font-size:13px">
               <a class="checkbox" style="padding-left: 0px">
                 <input type="checkbox">
-                 Amazon
-              </a>
-              <a class="checkbox" style="padding-left: 0px">
-                <input type="checkbox">
-                 Ebay
-              </a>
-              <a class="checkbox" style="padding-left: 0px">
-                <input type="checkbox">
-                 Coles
+                 Example
               </a>
             </ul>
 
@@ -96,6 +88,8 @@
       </div>
     </section>
     <section class="section" style="padding-left:0;padding-top:0;height:700px" v-if="currentUser.name != ''">
+      <section class="section" v-if="filteredItems.length == 0 " style="text-align:left;padding-left:0;padding-top:10px;color:darkgrey">You have no saved items :(</section>
+      
       <div class="columns">
         <div v-for="image in filteredItems" v-model="currentUser.items" class="column is-3">
           <itemcard :title="image.title" :price="image.price" :img="image.img" :category="image.category" :timestamp="image.timestamp" :link="image.link" :favourite="image.favourite" :itemId="image.key"></itemcard>
@@ -139,7 +133,8 @@ export default {
       var username = (snapshot.val() && snapshot.val().fname) || '';
       this.currentUser.name = username;
     });
-    var ref = db.ref('/users/' + userId + '/items').once("value", (snapshot) => {
+    var ref = db.ref('/users/' + userId + '/items').on("value", (snapshot) => {
+      this.currentUser.items = []
       snapshot.forEach((child) => {
         var key = child.key;
         var value = child.val();
@@ -156,7 +151,25 @@ export default {
       console.log('hey')
       if (this.sort == 'First added') this.currentUser.items.reverse();
       if (this.sort == 'Last added') this.currentUser.items.reverse();
-    }
+    },
+    extractHostname: function (url) {
+      var hostname;
+      //find & remove protocol (http, ftp, etc.) and get hostname
+
+      if (url.indexOf("://") > -1) {
+          hostname = url.split('/')[2];
+      }
+      else {
+          hostname = url.split('/')[0];
+      }
+
+      //find & remove port number
+      hostname = hostname.split(':')[0];
+      //find & remove "?"
+      hostname = hostname.split('?')[0];
+
+      return hostname;
+  }
   },
   computed: {
     // filters item list by search text (non case sensitive)

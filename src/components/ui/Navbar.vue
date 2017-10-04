@@ -1,5 +1,6 @@
 <template lang="html">
   <div>
+
   <nav class="nav has-shadow" style="z-index: 950;" >
 
     <div class="nav-left">
@@ -21,22 +22,88 @@
       <div class="nav-left">
         <div class="field search-bar-field" style="width: 93vw">
           <input class="input add-bar" placeholder="Paste link here." v-on:keyup.enter="addItem" v-model="link">
-            <a class="button add-item-btn" v-on:click="addItem" >Save</a>
+            <a class="button add-item-btn" v-on:click="addItem">Save</a>
         </div>
       </div>
     </nav>
   </transition>
+
+        <div class="modal is-active" v-if="showModal" style="z-index: 1000;">
+          <div class="modal-background"></div>
+          <div class="modal-content">
+            <div class="modal-card" style="border-radius: 8px">
+
+              <section class="modal-card-body">
+                <div class="container" v-if="item.images.length == 0" style="width:auto">
+                  <p class="loader-text" style="color:#00d3d1">Collecting details from link...</p><br>
+                  <three-dots></three-dots>
+                </div>
+                <div class="container" v-if="item.images.length != 0" style="padding-left:20px;padding-right:20px;width:auto">
+                  <h1 class="title">
+                    <strong>New Item</strong>
+                  </h1>
+                  <div class="columns">
+                    <div class="column is-4" style="height:300px;overflow-y:auto">
+                      <ul id="example-1">
+                        <li v-for="image in item.images">
+                          <img :src="image" width="300">
+                        </li>
+                      </ul>
+                    </div>
+                    <div class="column" style="text-align:left">
+                      <div class="field">
+                        <label class="label">Name</label>
+                        <div class="control">
+                          <input class="input" type="text" placeholder="" v-model="item.title">
+                        </div>
+                      </div>
+                      <div class="field">
+                        <label class="label">Price ($)</label>
+                        <div class="control">
+                          <input class="input" type="number" v-model="item.price">
+                        </div>
+                      </div>
+                      <div class="field">
+                        <label class="label">Category</label>
+                        <div class="control">
+                          <div class="select">
+                            <select v-model="item.category">
+                              <option disabled value="">Select a category</option>
+                              <option>Fashion</option>
+                              <option>Technology</option>
+                              <option>Other</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+              <footer class="modal-card-foot"  v-if="item.images.length != 0" style="justify-content:flex-end">
+                <button class="button is-success" style="background-color:#00d3d1" v-on:click="saveItem">Save</button>
+                <button class="button" v-on:click="closeModal">Cancel</button>
+              </footer>
+            </div>
+
+          </div>
+          <button class="modal-close is-large" aria-label="close" v-on:click="closeModal"></button>
+        </div>
+
   </div>
 </template>
 
 <script>
 import firebase from 'firebase'
 
+import axios from 'axios'
+import ThreeDots from 'vue-loading-spinner/src/components/ThreeDots'
+
 export default {
   name: 'navbar',
- created: function() {
-   console.log(this.$route.path)
- },
+  components: {
+      ThreeDots
+  },
  methods: {
    logout: function() {
      firebase.auth().signOut().then(() => {
@@ -44,13 +111,78 @@ export default {
      })
    },
    addItem: function() {
-     this.$router.replace({path: 'new-item', query: { url: this.link }});
+     this.showAddItem = false;
+//     this.$router.replace({path: 'new-item', query: { url: this.link }});
+      this.showModal = true;
+      axios.post(`http://localhost:3000/scrape`, {
+        link: this.link
+      })
+      .then(response => {
+        this.item.title = response.data.title;
+        axios.post(`http://localhost:3000/filter`, {
+          data: response.data.images_src,
+          link: this.link
+        }).then(response => {
+          this.item.images = response.data.split(" ");
+          this.item.images.slice(0,5)
+        }).catch(e => {
+          console.log(e)
+        })
+        this.showLoader = false;
+      })
+      .catch(e => {
+        console.log(e)
+      })
+   },
+   saveItem: function() {
+     let user = firebase.auth().currentUser;
+     var database = firebase.database();
+     let userId = user.uid
+     var myRef = firebase.database().ref().push();
+     var key = myRef.key;
+     var today = new Date();
+     var dd = today.getDate();
+     var mm = today.getMonth() + 1;
+     var yyyy = today.getFullYear();
+     if(dd<10) dd = '0'+dd;
+     if(mm<10) mm = '0'+mm;
+     var currTime = mm + '/' + dd + '/' + yyyy;
+     console.log(currTime);
+     var newData = {
+       title: this.item.title || '',
+       img: this.item.images[0] || '',
+       price: this.item.price || '',
+       category: this.item.category || '',
+       timestamp: currTime,
+       link: this.link,
+       favourite: false,
+     }
+     firebase.database().ref('users/' + userId + '/items/' + key).set(newData);
+     this.showModal = false;
+     this.link = '';
+     this.showAddItem = false;
+   },
+   closeModal: function () {
+     this.showModal = false;
+     this.link = '';
+     this.item.images = [];
+     this.item.title = '';
+     this.item.price = 0;
+     this.item.category = '';
    }
  },
  data () {
    return {
      showAddItem: false,
-     link: ''
+     link: '',
+     showModal: false,
+     item: {
+       images: [],
+       title: '',
+       price: 0,
+       category: '',
+     },
+     showLoader: true,
    }
  }
 }

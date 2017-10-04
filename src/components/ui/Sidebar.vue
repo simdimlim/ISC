@@ -52,15 +52,7 @@
     <ul class="menu-list" style="font-size:13px">
       <a class="checkbox" style="padding-left: 0px">
         <input type="checkbox">
-         Amazon
-      </a>
-      <a class="checkbox" style="padding-left: 0px">
-        <input type="checkbox">
-         Ebay
-      </a>
-      <a class="checkbox" style="padding-left: 0px">
-        <input type="checkbox">
-         Coles
+         Example
       </a>
     </ul>
 
