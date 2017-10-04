@@ -5,7 +5,7 @@
       <div class="columns">
       <!-- make sidebar hide pls on window smaller -->
         <div class="column"><sidebar style="margin-left:25px;margin-top:50px"/></div>
-        <div class="column is-10">
+        <div class="column is-10" style="padding-left:30px">
 
     <section class="section" style="padding-top:20px;padding-left:0;padding-bottom:15px">
 
@@ -22,16 +22,16 @@
            </select>
         </div>
         <p class="is-pulled-right" style="padding-right: 1%; padding-top: 0.5%;">Sort by: </p>
-        <h1 class="title" style="color:#3a3a3a;font-weight:200; text-align:left">
-          Hello <strong style="font-weight:600">{{currentUser.name}}</strong>
+        <h1 class="title" style="color:rgb(82, 82, 82);font-weight:200; text-align:left">
+          Hello {{currentUser.name}}
         </h1>
-        <p class="subtitle" style="text-align:left">Welcome to ISC!</p>
+        <p class="subtitle" style="text-align:left">Welcome to your ISC!</p>
       </div>
     </section>
     <section class="section" style="padding-left:0;padding-top:0;height:700px" v-if="currentUser.name != ''">
       <div class="columns">
         <div v-for="image in currentUser.items" v-model="currentUser.items" class="column is-3">
-          <itemcard :title="image.title" :price="image.price" :img="image.img" :timestamp="image.timestamp" :link="image.link" :favourite="image.favourite" :itemId="image.key"></itemcard>
+          <itemcard :title="image.title" :price="image.price" :img="image.img" :category="image.category" :timestamp="image.timestamp" :link="image.link" :favourite="image.favourite" :itemId="image.key"></itemcard>
         </div>
       </div>
     </section>

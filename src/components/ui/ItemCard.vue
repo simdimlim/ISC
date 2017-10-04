@@ -11,21 +11,21 @@
                <a :href="link" style="color: #00d3d1">Visit site</a>
                <br>
                <p>Added {{timestamp}}</p>
-               <a class="button is-primary is-outlined">
+               <a class="button is-primary is-outlined" style="border:none;">
                 <span class="icon is-small">
                   <i class="fa fa-tag"></i>
                 </span>
-                <span>fashion</span>
+                <span style="text-transform: lowercase;">{{category}}</span>
               </a>
               <a class="button is-pulled-right is-dark is-outlined" style="border:none;">
                  <span class="icon">
                     <i class="fa fa-trash"></i>
                  </span>
               </a>
-              <a class="button is-pulled-right is-danger is-outlined" v-on:click="clickedFavourite" style="border:none;">
-                 <span class="icon">
-                    <i v-if="favourite" class="fa fa-heart"></i>
-                    <i v-if="!favourite" class="fa fa-heart-o"></i>
+              <a class="button is-pulled-right" style="border:none;">
+                 <span class="icon has-text-danger">
+                    <i class="fa fa-heart-o" v-on:mouseover="hovering = !hovering"></i>
+                    <i class="fa fa-heart" v-if="hovering"></i>
                  </span>
               </a>
             </div>
@@ -40,10 +40,10 @@ import firebase from 'firebase'
 
 export default {
   name: 'itemcard',
-  props: ['title', 'price', 'img', 'timestamp', 'link', 'favourite', 'itemId'],
+  props: ['title', 'price', 'img', 'timestamp', 'link', 'favourite', 'itemId', 'category'],
   data () {
     return {
-
+      hovering: false
     }
   },
   methods: {

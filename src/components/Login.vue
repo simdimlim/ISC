@@ -27,7 +27,7 @@
                       </span>
                     </p>
                     <p class="control has-icon has-icon-right">
-                      <input class="input password-input" type="password" placeholder="Password" v-model="account.password">
+                      <input class="input password-input" type="password" placeholder="Password" v-model="account.password" v-on:keyup.enter="login">
                       <span class="icon user" style="height:inherit;padding-top:7px">
                         <i class="fa fa-lock"></i>
                       </span>
