@@ -4,16 +4,6 @@
          <img :src="img" alt="Placeholder image">
       </div>
       <div class="card-content">
-         <a class="button is-pulled-right is-dark is-outlined" style="border:none;">
-            <span class="icon">
-               <i class="fa fa-trash"></i>
-            </span>
-         </a>
-         <a class="button is-pulled-right is-danger is-outlined" style="border:none;">
-            <span class="icon">
-               <i class="fa fa-heart"></i>
-            </span>
-         </a>
          <div class="media">
             <div class="content">
                <p class="title is-4">{{title}}</p>
@@ -26,6 +16,16 @@
                   <i class="fa fa-tag"></i>
                 </span>
                 <span>fashion</span>
+              </a>
+              <a class="button is-pulled-right is-dark is-outlined" style="border:none;">
+                 <span class="icon">
+                    <i class="fa fa-trash"></i>
+                 </span>
+              </a>
+              <a class="button is-pulled-right is-danger is-outlined" style="border:none;">
+                 <span class="icon">
+                    <i class="fa fa-heart-o"></i>
+                 </span>
               </a>
             </div>
          </div>

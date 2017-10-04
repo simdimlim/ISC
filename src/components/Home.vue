@@ -7,6 +7,13 @@
         <div class="column"><sidebar style="margin-left:25px;margin-top:50px"/></div>
         <div class="column is-10">
     <section class="section" style="padding-top:20px">
+      <div class="select is-pulled-right" style="z-index: 3;">
+         <select>
+          <option>Price low to high</option>
+          <option>Price high to low</option>
+         </select>
+      </div>
+      <p class="is-pulled-right" style="padding-right: 1%; padding-top: 0.5%;">Sort by: </p>
       <div class="container" style="padding-top:100px;width:auto;padding-right:268px" v-if="currentUser.name == ''">
         <three-dots></three-dots>
       </div>
