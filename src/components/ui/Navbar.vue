@@ -3,12 +3,8 @@
   <nav class="nav has-shadow" style="z-index: 950;" >
 
     <div class="nav-left">
-      <router-link class="nav-item is-brand" to="/"><b>ISC</b></router-link>
+      <router-link style="padding-left:10px" class="nav-item is-brand" to="/"><b>ISC</b></router-link>
       <router-link class="nav-item is-tab" to="/">Dashboard</router-link>
-      <div class="field search-bar-field">
-        <input class="input search-bar" placeholder="Search items...">
-          <a class="button add-item-btn" ><i class="fa fa-search"></i></a>
-      </div>
     </div>
 
     <div class="nav-right">

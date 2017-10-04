@@ -33,7 +33,7 @@
               <div class="field">
                 <label class="label">Price ($)</label>
                 <div class="control">
-                  <input class="input" type="text" placeholder="" v-model="item.price">
+                  <input class="input" type="number" v-model="item.price">
                 </div>
               </div>
               <div class="field">
@@ -41,7 +41,7 @@
                 <div class="control">
                   <div class="select">
                     <select v-model="item.category">
-                      <option>Select a category</option>
+                      <option disabled value="">Select a category</option>
                       <option>Fashion</option>
                       <option>Technology</option>
                     </select>
@@ -49,7 +49,7 @@
                 </div>
               </div>
               <div class="field" style="padding-top:27px">
-                <input class="button" type="submit" v-on:click="addItem" value="Submit input">
+                <input class="button" type="submit" v-on:click="addItem" value="Save">
               </div>
             </div>
           </div>
@@ -80,7 +80,7 @@ export default {
       item: {
         images: [],
         title: '',
-        price: '',
+        price: 0,
         category: '',
       },
       link: this.$route.query.url,
