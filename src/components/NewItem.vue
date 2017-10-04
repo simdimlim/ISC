@@ -133,7 +133,7 @@ export default {
         favourite: false,
       }
       firebase.database().ref('users/' + userId + '/items/' + key).set(newData);
-
+      this.$router.replace('home');
     }
   }
 }
