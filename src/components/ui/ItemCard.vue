@@ -1,15 +1,16 @@
 <template>
    <div class="card">
    <div class="card-image">
-     <!-- <figure class="image is-4by3"> -->
        <img :src="img" alt="Placeholder image">
-     <!-- </figure> -->
    </div>
    <div class="card-content">
+      <a class="button is-pulled-right is-dark is-outlined" style="border:none;">
+         <span class="icon">
+            <i class="fa fa-trash"></i>
+          </span>
+  </a>
      <div class="media">
        <div class="content">
-         <!-- <p class="subtitle is-4">Ivyrevel Flat Pointed Ankle Boot With Metal Trim</p>
-         <p>$98.83</p> -->
          <p class="title is-4">{{title}}</p>
          <p class="subtitle is-5">${{price}}</p>
          <a>Visit site</a>
