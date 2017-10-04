@@ -113,12 +113,15 @@ export default {
       let user = firebase.auth().currentUser;
       var database = firebase.database();
       let userId = user.uid
-      firebase.database().ref('users/' + userId + '/items').set({
+      var myRef = firebase.database().ref().push();
+      var key = myRef.key;
+      var newData = {
         title: this.item.title || '',
         img: this.item.images[0] || '',
         price: this.item.price || '',
         category: this.item.category || '',
-      });
+      }
+      firebase.database().ref('users/' + userId + '/items/' + key).set(newData);
     }
   }
 }

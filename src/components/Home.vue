@@ -18,6 +18,11 @@
       </div>
     </section>
     <section class="section" style="padding-left:0;padding-top:0;height:700px">
+      <div class="columns">
+        <div v-for="image in currentUser.items" class="column is-3">
+          <itemcard :title="image.title" :price="image.price" :img="image.img"></itemcard>
+        </div>
+      </div>
     </section>
   </div>
 </div>
@@ -27,6 +32,7 @@
 <script>
 import navbar from './ui/Navbar'
 import sidebar from './ui/Sidebar'
+import itemcard from './ui/ItemCard'
 import firebase from 'firebase'
 import ThreeDots from 'vue-loading-spinner/src/components/ThreeDots'
 
@@ -34,6 +40,7 @@ export default {
   name: 'home',
   components: {
       navbar,
+      itemcard,
       sidebar,
       ThreeDots
   },
@@ -42,15 +49,26 @@ export default {
       currentUser: {
           name: '',
           photo: '',
+          items: [],
       },
       myvar: ''
     }
   },
   created: function() {
     var userId = firebase.auth().currentUser.uid;
-    return firebase.database().ref('/users/' + userId).once('value').then((snapshot) => {
+    var db = firebase.database();
+    db.ref('/users/' + userId).once('value').then((snapshot) => {
       var username = (snapshot.val() && snapshot.val().fname) || '';
       this.currentUser.name = username
+    });
+    var ref = db.ref('/users/' + userId + '/items').on("value", (snapshot) => {
+      snapshot.forEach((child) => {
+        var key = child.key;
+        var value = child.val();
+        this.currentUser.items.push(value);
+      });
+    }, function (errorObject) {
+      console.log("The read failed: " + errorObject.code);
     });
   }
 }

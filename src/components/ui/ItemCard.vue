@@ -2,7 +2,7 @@
    <div class="card">
    <div class="card-image">
      <!-- <figure class="image is-4by3"> -->
-       <img src="../assets/boots.jpeg" alt="Placeholder image">
+       <img :src="img" alt="Placeholder image">
      <!-- </figure> -->
    </div>
    <div class="card-content">
@@ -15,8 +15,8 @@
        <div class="content">
          <!-- <p class="subtitle is-4">Ivyrevel Flat Pointed Ankle Boot With Metal Trim</p>
          <p>$98.83</p> -->
-         <p class="title is-4">Ivyrevel Flat Pointed Ankle Boot With Metal Trim</p>
-         <p class="subtitle is-5">$98.83</p>
+         <p class="title is-4">{{title}}</p>
+         <p class="subtitle is-5">${{price}}</p>
          <a>Visit site</a>
          <br>
          <p>Added on 11:09 PM - 1 Jan 2016</p>
@@ -41,9 +41,10 @@ import "bulma/bulma.sass"
 
 export default {
   name: 'itemcard',
+  props: ['title', 'price', 'img'],
   data () {
     return {
-      
+
     }
   }
 }
