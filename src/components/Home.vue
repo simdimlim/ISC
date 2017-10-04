@@ -96,7 +96,7 @@
       </div>
     </section>
     <section class="section" style="padding-left:0;padding-top:0;height:700px" v-if="currentUser.name != ''">
-      <div class="columns">
+      <div class="columns is-multiline">
         <div v-for="image in filteredItems" v-model="currentUser.items" class="column is-3">
           <itemcard :title="image.title" :price="image.price" :img="image.img" :category="image.category" :timestamp="image.timestamp" :link="image.link" :favourite="image.favourite" :itemId="image.key"></itemcard>
         </div>
