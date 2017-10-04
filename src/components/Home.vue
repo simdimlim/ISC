@@ -6,21 +6,21 @@
       <!-- make sidebar hide pls on window smaller -->
         <div class="column"><sidebar style="margin-left:25px;margin-top:50px"/></div>
         <div class="column is-10">
-    <section class="section" style="padding-top:20px">
+    <section class="section" style="padding-top:20px;padding-left:0;padding-bottom:15px">
       <div class="container" style="padding-top:100px;width:auto;padding-right:268px" v-if="currentUser.name == ''">
         <three-dots></three-dots>
       </div>
-      <div class="container" style="width:auto;padding-right:268px" v-if="currentUser.name != ''">
-        <h1 class="title" style="color:#3a3a3a;font-weight:200">
+      <div class="container" style="width:auto;" v-if="currentUser.name != ''">
+        <h1 class="title" style="color:#3a3a3a;font-weight:200; text-align:left">
           Hello <strong style="font-weight:600">{{currentUser.name}}</strong>
         </h1>
-        <p class="subtitle">Welcome to ISC!</p>
+        <p class="subtitle" style="text-align:left">Welcome to ISC!</p>
       </div>
     </section>
     <section class="section" style="padding-left:0;padding-top:0;height:700px">
       <div class="columns">
         <div v-for="image in currentUser.items" class="column is-3">
-          <itemcard :title="image.title" :price="image.price" :img="image.img" :timestamp="image.timestamp"></itemcard>
+          <itemcard :title="image.title" :price="image.price" :img="image.img" :timestamp="image.timestamp" :link="image.link"></itemcard>
         </div>
       </div>
     </section>
@@ -67,6 +67,7 @@ export default {
         var value = child.val();
         this.currentUser.items.push(value);
       });
+      this.$router.push('home')
     }, function (errorObject) {
       console.log("The read failed: " + errorObject.code);
     });

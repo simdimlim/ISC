@@ -129,6 +129,8 @@ export default {
         price: this.item.price || '',
         category: this.item.category || '',
         timestamp: currTime,
+        link: this.link,
+        favourite: false,
       }
       firebase.database().ref('users/' + userId + '/items/' + key).set(newData);
 
