@@ -17,16 +17,19 @@
                 </span>
                 <span style="text-transform: lowercase;">{{category}}</span>
               </a>
-              <a class="button is-pulled-right is-dark is-outlined" style="border:none;">
+              
+             <modal v-show="showModal" @close="showModal = false" itemId=itemId userId=></modal>
+             
+              <span class="button is-pulled-right is-dark is-outlined" style="border:none;" @click="showModal = true">
                  <span class="icon">
                     <i class="fa fa-trash"></i>
                  </span>
-              </a>
-              <a class="button is-pulled-right" style="border:none;">
-                 <span class="icon has-text-danger">
-                    <i class="fa fa-heart-o" v-on:mouseover="hovering = !hovering"></i>
-                    <i class="fa fa-heart" v-if="hovering"></i>
-                 </span>
+              </span>
+              <a class="button is-pulled-right is-danger is-outlined" style="border:none;">
+                  <span class="icon">
+                     <i class="fa fa-heart-o"></i>
+                  </span>
+               </a>
               </a>
             </div>
          </div>
@@ -37,13 +40,18 @@
 <script>
 import "bulma/bulma.sass"
 import firebase from 'firebase'
+import modal from "../DeleteModal.vue"
 
 export default {
   name: 'itemcard',
   props: ['title', 'price', 'img', 'timestamp', 'link', 'favourite', 'itemId', 'category'],
+  components: {
+     modal
+ },
   data () {
     return {
-      hovering: false
+      hovering: false,
+      showModal: false
     }
   },
   methods: {
@@ -58,4 +66,13 @@ export default {
 </script>
 
 <style scoped>
+.button.is-primary.is-outlined:hover, .button.is-primary.is-outlined:focus {
+   background-color: #00d3d1;
+   color: #fff;
+}
+
+.button.is-primary.is-outlined {
+   color: #00d3d1;
+}
+
 </style>
