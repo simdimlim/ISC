@@ -7,11 +7,6 @@
    </div>
    <div class="card-content">
      <div class="media">
-       <!-- <div class="media-left"> -->
-         <!-- <figure class="image is-48x48">
-           <img src="http://bulma.io/images/placeholders/96x96.png" alt="Placeholder image">
-         </figure> -->
-       <!-- </div> -->
        <div class="content">
          <!-- <p class="subtitle is-4">Ivyrevel Flat Pointed Ankle Boot With Metal Trim</p>
          <p>$98.83</p> -->
@@ -19,19 +14,14 @@
          <p class="subtitle is-5">${{price}}</p>
          <a>Visit site</a>
          <br>
-         <p>Added on 11:09 PM - 1 Jan 2016</p>
-         <span class="icon is-small">
+         <p>Added 11:09 PM - 1 Jan 2016</p>
+         <font size="2">
+            <a><span class="icon is-small">
            <i class="fa fa-lg fa-tag"></i>
-        </span> fashion
+        </span> <span>fashion</span></a>
+     </font>
        </div>
      </div>
-
-     <!-- <div class="content">
-       Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-       Phasellus nec iaculis mauris.
-       <br>
-       <time datetime="2016-1-1">11:09 PM - 1 Jan 2016</time>
-     </div> -->
    </div>
  </div>
 </template>
