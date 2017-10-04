@@ -1,18 +1,11 @@
 <template lang="html">
   <aside class="menu" style="text-align:left">
 
-    <p class="menu-label">Navigation</p>
+    <p class="menu-label">Search</p>
 
     <ul class="menu-list">
-      <div class="columns">
-        <div class="column is-9">
-          <div class="field search-bar-field">
-            <input class="input search-bar" placeholder="Search items...">
-          </div>
-        </div>
-        <div class="column is-3">
-          <a class="button add-item-btn"><i class="fa fa-search"></i></a>
-        </div>
+      <div class="field search-bar-field">
+        <input class="input search-bar" v-model="searchText" placeholder="Search items...">
       </div>
       <br>
     </ul>
@@ -73,7 +66,12 @@
 
 <script>
 export default {
-  name: 'sidebar'
+  name: 'sidebar',
+  data: function () {
+    return {
+      searchText: ''
+    }
+  }
 }
 </script>
 
@@ -89,5 +87,8 @@ export default {
   background-color: #00d3d1;
   color: white;
   border: none;
+}
+.menu-label {
+  color: #00d3d1;
 }
 </style>
