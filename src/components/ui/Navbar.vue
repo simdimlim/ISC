@@ -43,13 +43,6 @@
                     <strong>New Item</strong>
                   </h1>
                   <div class="columns">
-                    <div class="column is-4" style="height:300px;overflow-y:auto">
-                      <ul id="example-1">
-                        <li v-for="image in item.images">
-                          <img :src="image" width="300">
-                        </li>
-                      </ul>
-                    </div>
                     <div class="column" style="text-align:left">
                       <div class="field">
                         <label class="label">Name</label>
@@ -77,6 +70,19 @@
                         </div>
                       </div>
                     </div>
+                      <div class="column is-4" style="text-align:left">
+                        <label class="label">Image</label>
+                        <div class="control">
+                        <ul id="example-1" style="height:250px;overflow-y:auto;overflow-x:hidden;" class="control">
+                          <li v-for="image in item.images" v-if="image != ''">
+                            <div class="columns">
+                              <div class="column is-9"><img :src="image" style="width:auto"></div>
+                              <div class="column"><input type="radio" name="answer" v-model="pick" v-bind:value="image" style="position:relative;top:50%"></div>
+                            </div>
+                          </li>
+                        </ul>
+                        </div>
+                      </div>
                   </div>
                 </div>
               </section>
@@ -124,7 +130,6 @@ export default {
           link: this.link
         }).then(response => {
           this.item.images = response.data.split(" ");
-          this.item.images.slice(0,5)
         }).catch(e => {
           console.log(e)
         })
@@ -150,7 +155,7 @@ export default {
      console.log(currTime);
      var newData = {
        title: this.item.title || '',
-       img: this.item.images[0] || '',
+       img: this.pick || '',
        price: this.item.price || '',
        category: this.item.category || '',
        timestamp: currTime,
@@ -183,6 +188,7 @@ export default {
        category: '',
      },
      showLoader: true,
+     pick: '',
    }
  }
 }
