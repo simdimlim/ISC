@@ -26,10 +26,10 @@
               <li><a style="padding-left:0px;font-size:13px">Sort by Price</a></li>
               <div class="columns" style="margin-bottom:0px">
                 <div class="column" style="padding-right:5px">
-                  <input class="input" type="number" placeholder="Min" style="height:30px;font-size:13px;box-shadow:none">
+                  <input class="input" type="number" v-model="minPrice" placeholder="Min" style="height:30px;font-size:13px;box-shadow:none">
                 </div>
                 <div class="column" style="padding-left:0">
-                  <input class="input" type="number" placeholder="Max" style="height:30px;font-size:13px;box-shadow:none">
+                  <input class="input" type="number" v-model="maxPrice" placeholder="Max" style="height:30px;font-size:13px;box-shadow:none">
                 </div>
               </div>
               <li>
@@ -129,7 +129,11 @@ export default {
       },
       myvar: '',
       sort: 'Last added',
-      searchText: ''
+      searchText: '',
+      minPrice: '',
+      maxPrice: '',
+      category: '',
+      favourite: '',
     }
   },
   created: function() {
@@ -159,20 +163,49 @@ export default {
     }
   },
   computed: {
-    // filters item list by search text (non case sensitive)
     filteredItems: function () {
-      if (!this.searchText) return this.currentUser.items;
+      // filters item list by search text (non case sensitive)
+      var list = [];
+      if (!this.searchText) {
+        list = this.currentUser.items;
+      }
       else {
         var i, len, item;
         len = this.currentUser.items.length;
-        var list = [];
         for (i = 0; i < len; i++) {
           item = this.currentUser.items[i].title.toUpperCase()
           if (item.indexOf(this.searchText.toUpperCase()) !== -1) {
             list.push(this.currentUser.items[i]);
           }
         }
+      }
+      // filters item list by min and max prices
+      var newList = [];
+      if (!this.minPrice && !this.maxPrice) {
         return list;
+      } else {
+        var i, len, item;
+        len = list.length;
+        for (i = 0; i < len; i++) {
+          item = parseInt(list[i].price);
+          // if only min price is empty
+          if (!this.minPrice) {
+            if (item <= this.maxPrice) {
+              newList.push(list[i]);
+            }
+          } 
+          // if only max price is empty
+          else if (!this.maxPrice) {
+            if (item >= this.minPrice) {
+              newList.push(list[i]);
+            }
+          } else {
+            if (item >= this.minPrice && item <= this.maxPrice) {
+              newList.push(list[i]);
+            }
+          }
+        }
+        return newList;
       }
     }
   }
