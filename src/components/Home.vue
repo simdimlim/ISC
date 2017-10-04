@@ -89,8 +89,8 @@
     </section>
     <section class="section" style="padding-left:0;padding-top:0;height:700px" v-if="currentUser.name != ''">
       <section class="section" v-if="filteredItems.length == 0 " style="text-align:left;padding-left:0;padding-top:10px;color:darkgrey">You have no saved items :(</section>
-      
-      <div class="columns">
+
+      <div class="columns is-multiline">
         <div v-for="image in filteredItems" v-model="currentUser.items" class="column is-3">
           <itemcard :title="image.title" :price="image.price" :img="image.img" :category="image.category" :timestamp="image.timestamp" :link="image.link" :favourite="image.favourite" :itemId="image.key"></itemcard>
         </div>
@@ -206,7 +206,7 @@ export default {
             if (item <= this.maxPrice) {
               newList.push(list[i]);
             }
-          } 
+          }
           // if only max price is empty
           else if (!this.maxPrice) {
             if (item >= this.minPrice) {
