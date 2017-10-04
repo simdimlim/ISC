@@ -4,7 +4,74 @@
 
       <div class="columns">
       <!-- make sidebar hide pls on window smaller -->
-        <div class="column"><sidebar style="margin-left:25px;margin-top:50px"/></div>
+        <div class="column">
+          <aside class="menu is-hidden-touch" style="text-align:left;margin-left:25px;margin-top:50px">
+
+            <p class="menu-label" style="margin-left:1px">Search</p>
+
+            <ul class="menu-list" style="padding-bottom:15px">
+              <div class="field search-bar-field">
+                <p class="control has-icons-left">
+                  <input class="input search-bar" v-model="searchText" style="box-shadow:none;height:30px;font-size:13px" placeholder="Search items">
+                  <span style="padding-top:6px" class="icon is-small is-left">
+                        <i class="fa fa-search"></i>
+                      </span>
+                    </p>
+              </div>
+            </ul>
+
+            <p class="menu-label">Filter</p>
+
+            <ul class="menu-list">
+              <li><a style="padding-left:0px;font-size:13px">Sort by Price</a></li>
+              <div class="columns" style="margin-bottom:0px">
+                <div class="column" style="padding-right:5px">
+                  <input class="input" type="number" placeholder="Min" style="height:30px;font-size:13px;box-shadow:none">
+                </div>
+                <div class="column" style="padding-left:0">
+                  <input class="input" type="number" placeholder="Max" style="height:30px;font-size:13px;box-shadow:none">
+                </div>
+              </div>
+              <li>
+                <p style="padding-left:0px;font-size:13px;padding-top:10px;padding-bottom:8px">Sort by Category</p>
+                <div class="select is-primary" style="height:30px;font-size:13px">
+                  <select style="border: solid 1px #00d3d1">
+                    <option>None</option>
+                    <option>Option 2</option>
+                    <option>Rick</option>
+                    <option>And</option>
+                    <option>Morty</option>
+                  </select>
+                </div>
+              </li>
+              <span class="checkbox" style="padding-left:0px;font-size:13px;padding-top:20px;padding-bottom:20px">
+                <input type="checkbox">
+                 Favourites Only
+               </input>
+             </span>
+              <a class="button is-primary" style="height:30px;font-size:13px;background-color:#00d3d1">Apply</a>
+              <br>
+            </ul>
+
+            <p class="menu-label">My Stores</p>
+
+            <ul class="menu-list" style="font-size:13px">
+              <a class="checkbox" style="padding-left: 0px">
+                <input type="checkbox">
+                 Amazon
+              </a>
+              <a class="checkbox" style="padding-left: 0px">
+                <input type="checkbox">
+                 Ebay
+              </a>
+              <a class="checkbox" style="padding-left: 0px">
+                <input type="checkbox">
+                 Coles
+              </a>
+            </ul>
+
+          </aside>
+        </div>
         <div class="column is-10" style="padding-left:30px">
 
     <section class="section" style="padding-top:20px;padding-left:0;padding-bottom:15px">
@@ -30,7 +97,7 @@
     </section>
     <section class="section" style="padding-left:0;padding-top:0;height:700px" v-if="currentUser.name != ''">
       <div class="columns">
-        <div v-for="image in currentUser.items" v-model="currentUser.items" class="column is-3">
+        <div v-for="image in filteredItems" v-model="currentUser.items" class="column is-3">
           <itemcard :title="image.title" :price="image.price" :img="image.img" :category="image.category" :timestamp="image.timestamp" :link="image.link" :favourite="image.favourite" :itemId="image.key"></itemcard>
         </div>
       </div>
@@ -42,7 +109,6 @@
 
 <script>
 import navbar from './ui/Navbar'
-import sidebar from './ui/Sidebar'
 import itemcard from './ui/ItemCard'
 import firebase from 'firebase'
 import ThreeDots from 'vue-loading-spinner/src/components/ThreeDots'
@@ -52,7 +118,6 @@ export default {
   components: {
       navbar,
       itemcard,
-      sidebar,
       ThreeDots
   },
   data: function() {
@@ -60,10 +125,11 @@ export default {
       currentUser: {
           name: '',
           photo: '',
-          items: [],
+          items: []
       },
       myvar: '',
-      sort: 'Last added'
+      sort: 'Last added',
+      searchText: ''
     }
   },
   created: function() {
@@ -91,10 +157,43 @@ export default {
       if (this.sort == 'First added') this.currentUser.items.reverse();
       if (this.sort == 'Last added') this.currentUser.items.reverse();
     }
+  },
+  computed: {
+    // filters item list by search text (non case sensitive)
+    filteredItems: function () {
+      if (!this.searchText) return this.currentUser.items;
+      else {
+        var i, len, item;
+        len = this.currentUser.items.length;
+        var list = [];
+        for (i = 0; i < len; i++) {
+          item = this.currentUser.items[i].title.toUpperCase()
+          if (item.indexOf(this.searchText.toUpperCase()) !== -1) {
+            list.push(this.currentUser.items[i]);
+          }
+        }
+        return list;
+      }
+    }
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.menu-list a.is-active {
+    background-color: #00d3d1;
+}
+.menu-list a:hover {
+    color: #00d3d1;
+}
+.add-item-btn {
+  margin-right: 0px;
+  background-color: #00d3d1;
+  color: white;
+  border: none;
+}
+.menu-label {
+  color: #00d3d1;
+}
 </style>
