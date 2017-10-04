@@ -41,8 +41,9 @@ export default {
   },
   methods: {
       deleteItem: function() {
-         let db = firebase.database();
-         let itemsRef = db.auth().ref()
+         firebase.database().ref('users/' + this.userId + '/items/' + this.itemId).remove();
+         this.$emit('close');
+         this.$router.go(this.$router.currentRoute);
       }
    }
 }

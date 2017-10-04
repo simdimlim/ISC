@@ -18,7 +18,7 @@
                 <span style="text-transform: lowercase;">{{category}}</span>
               </a>
               
-             <modal v-show="showModal" @close="showModal = false" itemId=itemId userId=></modal>
+             <modal v-show="showModal" @close="showModal = false" v-bind:itemId=itemId v-bind:userId=userId></modal>
              
               <span class="button is-pulled-right is-dark is-outlined" style="border:none;" @click="showModal = true">
                  <span class="icon">
@@ -51,7 +51,8 @@ export default {
   data () {
     return {
       hovering: false,
-      showModal: false
+      showModal: false,
+      userId: firebase.auth().currentUser.uid
     }
   },
   methods: {
