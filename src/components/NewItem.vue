@@ -115,13 +115,23 @@ export default {
       let userId = user.uid
       var myRef = firebase.database().ref().push();
       var key = myRef.key;
+      var today = new Date();
+      var dd = today.getDate();
+      var mm = today.getMonth() + 1;
+      var yyyy = today.getFullYear();
+      if(dd<10) dd = '0'+dd;
+      if(mm<10) mm = '0'+mm;
+      var currTime = mm + '/' + dd + '/' + yyyy;
+      console.log(currTime);
       var newData = {
         title: this.item.title || '',
         img: this.item.images[0] || '',
         price: this.item.price || '',
         category: this.item.category || '',
+        timestamp: currTime,
       }
       firebase.database().ref('users/' + userId + '/items/' + key).set(newData);
+
     }
   }
 }

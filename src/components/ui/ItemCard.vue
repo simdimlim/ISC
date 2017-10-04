@@ -14,7 +14,7 @@
          <p class="subtitle is-5">${{price}}</p>
          <a>Visit site</a>
          <br>
-         <p>Added 11:09 PM - 1 Jan 2016</p>
+         <p>Added {{timestamp}}</p>
          <font size="2">
             <a><span class="icon is-small">
            <i class="fa fa-lg fa-tag"></i>
@@ -31,7 +31,7 @@ import "bulma/bulma.sass"
 
 export default {
   name: 'itemcard',
-  props: ['title', 'price', 'img'],
+  props: ['title', 'price', 'img', 'timestamp'],
   data () {
     return {
 

@@ -20,7 +20,7 @@
     <section class="section" style="padding-left:0;padding-top:0;height:700px">
       <div class="columns">
         <div v-for="image in currentUser.items" class="column is-3">
-          <itemcard :title="image.title" :price="image.price" :img="image.img"></itemcard>
+          <itemcard :title="image.title" :price="image.price" :img="image.img" :timestamp="image.timestamp"></itemcard>
         </div>
       </div>
     </section>
