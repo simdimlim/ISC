@@ -1,7 +1,7 @@
 <template>
    <div class="card">
       <div class="card-image">
-         <img :src="img" alt="Placeholder image">
+         <img :src="img">
       </div>
       <div class="card-content">
          <div class="media">

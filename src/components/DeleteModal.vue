@@ -14,10 +14,10 @@
          
          <div class="field has-addons">
             <p class="control" style="width:50%;">
-            <a class="button is-success" style="padding:30px; width:100%;" @click="deleteItem()">YES</a>
+            <a class="button is-success" style="padding:30px; width:100%;" @click="deleteItem()"><b>YES</b></a>
          </p>
          <p class="control" style="width:50%;">
-            <a class="button is-danger" style="padding:30px; width:101%;" @click="$emit('close')">NO</a>
+            <a class="button is-danger" style="padding:30px; width:101%;" @click="$emit('close')"><b>NO</b></a>
          </p>
          </div>
          
