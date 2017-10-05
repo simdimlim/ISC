@@ -121,8 +121,7 @@ export default {
       var yyyy = today.getFullYear();
       if(dd<10) dd = '0'+dd;
       if(mm<10) mm = '0'+mm;
-      // shouldn't this be dd/mm/yy?
-      var currTime = mm + '/' + dd + '/' + yyyy;
+      var currTime = dd + '/' + mm + '/' + yyyy;
       console.log(currTime);
       var newData = {
         title: this.item.title || '',
