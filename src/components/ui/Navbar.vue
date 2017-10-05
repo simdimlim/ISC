@@ -1,101 +1,98 @@
 <template lang="html">
   <div>
-
-  <nav class="nav has-shadow" style="z-index: 950;" >
-
-    <div class="nav-left">
-      <router-link style="padding-left:10px" class="nav-item is-brand" to="/"><b>ISC</b></router-link>
-      <router-link class="nav-item is-tab" to="/">Dashboard</router-link>
-    </div>
-
-    <div class="nav-right">
-      <span class="nav-item">
-        <button  class="button add-item-btn" v-if="this.$route.path != '/new-item'" v-on:click="showAddItem = !showAddItem"><i class="fa fa-plus"></i>&nbspAdd Item</button>
-      </span>
-      <button class="button" style="margin-top:8px;margin-right:10px" v-on:click="logout">Logout</Button>
-
-    </div>
-  </nav>
-  <transition name="slide-fade">
-    <nav class="nav has-shadow" v-if="showAddItem" style="border-top: 1px solid #f5f5f5; height: 57px; padding-left:13px; z-index: 900;">
-
+    <nav class="nav has-shadow" style="z-index: 950;" >
       <div class="nav-left">
-        <div class="field search-bar-field" style="width: 93vw">
-          <input class="input add-bar" placeholder="Paste link here." v-on:keyup.enter="addItem" v-model="link">
-            <a class="button add-item-btn" v-on:click="addItem">Save</a>
-        </div>
+        <router-link style="padding-left:10px" class="nav-item is-brand" to="/"><b>ISC</b></router-link>
+        <router-link class="nav-item is-tab" to="/" style="color:#313131">Dashboard</router-link>
+      </div>
+      <div class="nav-right">
+        <span class="nav-item">
+          <button  class="button add-item-btn" v-if="this.$route.path != '/new-item'" v-on:click="showAddItem = !showAddItem"><i class="fa fa-plus"></i>&nbspAdd Item</button>
+        </span>
+        <button class="button" style="margin-top:8px;margin-right:10px" v-on:click="logout">Logout</Button>
       </div>
     </nav>
-  </transition>
-
-        <div class="modal is-active" v-if="showModal" style="z-index: 1000;">
-          <div class="modal-background"></div>
-          <div class="modal-content">
-            <div class="modal-card" style="border-radius: 8px">
-
-              <section class="modal-card-body">
-                <div class="container" v-if="item.images.length == 0" style="width:auto">
-                  <p class="loader-text" style="color:#00d3d1">Collecting details from link...</p><br>
-                  <three-dots></three-dots>
-                </div>
-                <div class="container" v-if="item.images.length != 0" style="padding-left:20px;padding-right:20px;width:auto">
-                  <h1 class="title">
-                    <strong>New Item</strong>
-                  </h1>
-                  <div class="columns">
-                    <div class="column" style="text-align:left">
-                      <div class="field">
-                        <label class="label">Name</label>
-                        <div class="control">
-                          <input class="input" type="text" placeholder="" v-model="item.title">
-                        </div>
-                      </div>
-                      <div class="field">
-                        <label class="label">Price ($)</label>
-                        <div class="control">
-                          <input class="input" type="number" v-model="item.price">
-                        </div>
-                      </div>
-                      <div class="field">
-                        <label class="label">Category</label>
-                        <div class="control">
-                          <div class="select">
-                            <select v-model="item.category">
-                              <option disabled value="">Select a category</option>
-                              <option>Fashion</option>
-                              <option>Technology</option>
-                              <option>Other</option>
-                            </select>
-                          </div>
-                        </div>
+    <transition name="slide-fade">
+      <nav class="nav has-shadow" v-if="showAddItem" style="border-top: 1px solid #f5f5f5; height: 57px; padding-left:13px; z-index: 900;">
+        <div class="nav-left">
+          <div class="field search-bar-field" style="width: 93vw">
+            <input class="input add-bar" placeholder="Paste link here." v-on:keyup.enter="addItem" v-model="link">
+            <a class="button add-item-btn" v-on:click="addItem">Save</a>
+          </div>
+        </div>
+      </nav>
+    </transition>
+    <div class="modal is-active" v-if="showModal" style="z-index: 1000;">
+      <div class="modal-background"></div>
+      <div class="modal-content">
+        <div class="modal-card" style="border-radius: 8px">
+          <section class="modal-card-body">
+            <div class="container" v-if="item.images.length == 0" style="width:auto">
+              <p class="loader-text" style="color:#00d3d1">Collecting details from link...</p><br>
+              <three-dots></three-dots>
+            </div>
+            <div class="container" v-if="item.images.length != 0" style="padding-left:20px;padding-right:20px;width:auto">
+              <h1 class="title">
+                <strong>New Item</strong>
+              </h1>
+              <div class="columns">
+                <div class="column" style="text-align:left">
+                  <div class="field">
+                    <label class="label">Name</label>
+                    <div class="control">
+                      <input class="input" type="text" placeholder="" v-model="item.title">
+                    </div>
+                  </div>
+                  <div class="field">
+                    <label class="label">Price ($)</label>
+                    <div class="control">
+                      <input class="input" type="number" v-model="item.price">
+                    </div>
+                  </div>
+                  <div class="field">
+                    <label class="label">Category</label>
+                    <div class="control">
+                      <div class="select">
+                        <select v-model="item.category">
+                          <option disabled value="">Select a category</option>
+                          <option>Fashion</option>
+                          <option>Motors</option>
+                          <option>Home & Garden</option>
+                          <option>Electronics</option>
+                          <option>Sports</option>
+                          <option>Health, Beauty & Baby</option>
+                          <option>Toys & Media</option>
+                          <option>Collectables</option>
+                          <option>Other</option>
+                        </select>
                       </div>
                     </div>
-                      <div class="column is-4" style="text-align:left">
-                        <label class="label">Image</label>
-                        <div class="control">
-                        <ul id="example-1" style="height:250px;overflow-y:auto;overflow-x:hidden;" class="control">
-                          <li v-for="image in item.images" v-if="image != ''">
-                            <div class="columns">
-                              <div class="column is-9"><img :src="image" style="width:auto"></div>
-                              <div class="column"><input type="radio" name="answer" v-model="pick" v-bind:value="image" style="position:relative;top:50%"></div>
-                            </div>
-                          </li>
-                        </ul>
-                        </div>
-                      </div>
                   </div>
                 </div>
-              </section>
-              <footer class="modal-card-foot"  v-if="item.images.length != 0" style="justify-content:flex-end">
-                <button class="button is-success" style="background-color:#00d3d1" v-on:click="saveItem">Save</button>
-                <button class="button" v-on:click="closeModal">Cancel</button>
-              </footer>
+                <div class="column is-4" style="text-align:left">
+                  <label class="label">Image</label>
+                  <div class="control">
+                    <ul id="example-1" style="height:250px;overflow-y:auto;overflow-x:hidden;" class="control">
+                      <li v-for="image in item.images" v-if="image != ''">
+                        <div class="columns">
+                          <div class="column is-9"><img :src="image" style="width:auto"></div>
+                          <div class="column"><input type="radio" name="answer" v-model="pick" v-bind:value="image" style="position:relative;top:50%"></div>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
             </div>
-
-          </div>
-          <button class="modal-close is-large" aria-label="close" v-on:click="closeModal"></button>
+          </section>
+          <footer class="modal-card-foot"  v-if="item.images.length != 0" style="justify-content:flex-end">
+            <button class="button is-success" style="background-color:#00d3d1" v-on:click="saveItem">Save</button>
+            <button class="button" v-on:click="closeModal">Cancel</button>
+          </footer>
         </div>
-
+      </div>
+      <button class="modal-close is-large" aria-label="close" v-on:click="closeModal"></button>
+    </div>
   </div>
 </template>
 
@@ -133,7 +130,6 @@ export default {
         }).catch(e => {
           console.log(e)
         })
-        this.showLoader = false;
       })
       .catch(e => {
         console.log(e)
@@ -166,6 +162,12 @@ export default {
      this.showModal = false;
      this.link = '';
      this.showAddItem = false;
+
+     this.showLoader = false;
+       this.item.images = [];
+       this.item.title = '';
+       this.item.price = 0;
+       this.item.category = '';
    },
    closeModal: function () {
      this.showModal = false;

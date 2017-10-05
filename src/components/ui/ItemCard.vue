@@ -1,9 +1,9 @@
 <template>
-   <div class="card">
-      <div class="card-image">
-         <img :src="img">
+   <div class="card" style="">
+      <div class="card-image" style="height:300px;position:relative;width:100%;overflow:hidden">
+         <img :src="img" style="top:0;left:0;bottom:0;right:0;margin:auto;position:absolute;z-index:0;width:100%">
       </div>
-      <div class="card-content">
+      <div class="card-content" style="position:relative;background-color:white">
          <div class="media">
             <div class="content">
                <p class="title is-4" style="font-size:19px;padding-bottom:7px">{{title}}</p>
@@ -20,7 +20,7 @@
 
              <modal v-show="showModal" @close="showModal = false" :itemId=itemId :userId=userId></modal>
 
-              <span class="button is-pulled-right is-inverted is-dark" style="border:none; background:none;" 
+              <span class="button is-pulled-right is-inverted is-dark" style="border:none; background:none;"
               @click="showModal = true"
               @mouseover="hoverDel = true"
               @mouseout="hoverDel = false">
@@ -29,16 +29,16 @@
                     <i class="fa fa-trash has-text-grey" v-else></i>
                  </span>
               </span>
-              <a class="button is-pulled-right" style="border:none;" 
+              <a class="button is-pulled-right" style="border:none;"
               @click="clickedFavourite"
-              @mouseover="hovering = true" 
+              @mouseover="hovering = true"
               @mouseout="hovering = false">
                   <span class="icon">
                      <i class="fa fa-heart has-text-danger" v-if="favourite"></i>
                      <i class="fa fa-heart-o" v-else-if="!hovering"></i>
                      <i class="fa fa-heart-o has-text-danger" v-else></i>
                   </span>
-                  
+
                </a>
             </div>
          </div>
