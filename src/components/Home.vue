@@ -80,7 +80,8 @@
           <section class="section" v-if="showNoItems" style="text-align:left;padding-left:0;padding-top:10px;color:darkgrey">You have no saved items :(</section>
           <div class="columns is-multiline">
             <div v-for="image in filteredItems" v-model="currentUser.items" class="column is-3">
-              <itemcard :title="image.title" :price="image.price" :img="image.img" :category="image.category" :timestamp="image.timestamp" :link="image.link" :favourite="image.favourite" :itemId="image.key"></itemcard>
+              <itemcard :title="image.title" :price="image.price" :img="image.img" :category="image.category" :timestamp="image.timestamp" :link="image.link" :favourite="image.favourite" :itemId="image.key"
+              :purchased="image.purchased"></itemcard>
             </div>
           </div>
         </section>
@@ -116,6 +117,7 @@ export default {
       maxPrice: '',
       category: '',
       favourite: '',
+      purchased: ''
     }
   },
   created: function() {

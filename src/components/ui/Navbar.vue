@@ -147,7 +147,7 @@ export default {
      var yyyy = today.getFullYear();
      if(dd<10) dd = '0'+dd;
      if(mm<10) mm = '0'+mm;
-     var currTime = mm + '/' + dd + '/' + yyyy;
+     var currTime = dd + '/' + mm + '/' + yyyy;
      console.log(currTime);
      var newData = {
        title: this.item.title || '',
@@ -157,6 +157,7 @@ export default {
        timestamp: currTime,
        link: this.link,
        favourite: false,
+       purchased: false
      }
      firebase.database().ref('users/' + userId + '/items/' + key).set(newData);
      this.showModal = false;
@@ -245,5 +246,10 @@ b {
 
 .nav-item a.is-tab:hover, a.nav-item.is-tab:hover {
   border-bottom: 1px solid #00d3d1;
+}
+
+.modal-close:after, .modal-close:before {
+     margin-left: 0px; 
+     margin-top: 0px; 
 }
 </style>
