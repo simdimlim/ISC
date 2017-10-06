@@ -29,12 +29,9 @@
             <li>
               <p style="padding-left:0px;font-size:13px;padding-top:10px;padding-bottom:8px">Sort by Category</p>
               <div class="select is-primary" style="height:30px;font-size:13px">
-                <select style="border: solid 1px #00d3d1">
+                <select v-model="category" style="border: solid 1px #00d3d1">
                   <option>None</option>
-                  <option>Option 2</option>
-                  <option>Rick</option>
-                  <option>And</option>
-                  <option>Morty</option>
+                  <option v-for="c in categories">{{ c }}</option>
                 </select>
               </div>
             </li>
@@ -43,7 +40,7 @@
                 Favourites Only
               </input>
             </span>
-            <a class="button is-primary" style="height:30px;font-size:13px;background-color:#00d3d1">Apply</a>
+            <a class="button is-primary" v-on:click="resetFilters" style="height:30px;font-size:13px;background-color:#00d3d1">Reset Filters</a>
             <br>
           </ul>
           <p class="menu-label">My Stores</p>
@@ -115,8 +112,12 @@ export default {
       searchText: '',
       minPrice: '',
       maxPrice: '',
+      categories: [
+        'Fashion',
+        'Technology',
+        'Electronics'
+      ],
       category: '',
-      favourite: '',
       purchased: '',
       showFaves: false
     }
@@ -165,15 +166,14 @@ export default {
 
       return hostname;
     },
-  },
-  computed: {
-
-    showNoItems: function() {
-      return this.filteredItems.length == 0 && this.searchText == '';
+    resetFilters: function () {
+      this.minPrice = '';
+      this.maxPrice = '';
+      this.category = '';
+      this.showFaves = false; 
     },
-    filteredItems: function () {
-      // filters item list by search text (non case sensitive)
-      var list = [];
+    // filters item list by search text (non case sensitive)
+    filterSearch: function (list) {
       if (!this.searchText) {
         list = this.currentUser.items;
       }
@@ -187,9 +187,11 @@ export default {
           }
         }
       }
-      
+      return list;
+    },
+    filterFavourites: function (list) {
       if (this.showFaves) {
-        var i, len, item;
+        var i, len;
         var newList = [];
         len = list.length;
         for (i = 0; i < len; i++) {
@@ -197,10 +199,13 @@ export default {
              newList.push(list[i]);
           }
         }
-        list = newList;
-     }
-      
-      // filters item list by min and max prices
+        return newList;
+      } else {
+        return list;
+      }
+    },
+    // filters item list by min and max prices
+    filterPrice: function (list) {
       var newList = [];
       if (!this.minPrice && !this.maxPrice) {
         return list;
@@ -228,6 +233,38 @@ export default {
         }
         return newList;
       }
+    },
+    // filters item list by categories
+    filterCategory: function (list) {
+      var newList = [];
+      if (!this.category || this.category == 'None') {
+        return list;
+      } else {
+        var i, len, itemCat;
+        len = list.length;
+        for (i = 0; i < len; i++) {
+          itemCat = list[i].category;
+          if (itemCat === this.category) {
+            newList.push(list[i]);
+          }
+        }
+        return newList;
+      }
+    }
+  },
+  computed: {
+
+    showNoItems: function() {
+      return this.filteredItems.length == 0 && this.searchText == '';
+    },
+    // return list of items with all filters applied
+    filteredItems: function () {
+      var list = [];
+      list = this.filterSearch(list);
+      list = this.filterFavourites(list);
+      list = this.filterPrice(list);
+      list = this.filterCategory(list);
+      return list;
     }
   }
 }
