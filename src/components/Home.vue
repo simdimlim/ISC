@@ -115,7 +115,14 @@ export default {
       categories: [
         'Fashion',
         'Technology',
-        'Electronics'
+        'Electronics',
+        'Motors',
+        'Home & Garden',
+        'Sports',
+        'Health, Beauty & Baby',
+        'Toys & Media',
+        'Collectables',
+        'Other'
       ],
       category: '',
       purchased: '',
