@@ -9,18 +9,18 @@
                <p class="title is-4" style="font-size:19px;padding-bottom:7px">{{title}}</p>
                <p class="subtitle is-5" style="margin-bottom:10px" v-show="price">${{price}}</p>
                <a :href="link" target="_blank" style="color: #00d3d1">Visit site</a>
-               <br>
-               <p>Added {{timestamp}}</p>
-               <a class="button is-primary is-outlined" style="border:none;" v-show="category">
+               <div style="padding-top:5px;padding-bottom:10px;">Added {{timestamp}}</div>
+               <a class="button is-primary is-outlined is-pulled-left is-small" style="border:none;" v-show="category">
                 <span class="icon is-small">
                   <i class="fa fa-tag"></i>
                 </span>
-                <span style="text-transform: lowercase;">{{category}}</span>
+                <span style="text-transform: lowercase; font-size: 15px;">{{category}}</span>
               </a>
 
              <modal v-show="showModal" @close="showModal = false" :itemId=itemId :userId=userId></modal>
-
-              <span class="button is-pulled-right is-inverted is-dark" style="border:none; background:none;"
+             
+             <div style="padding-top:24px;" v-show="category"></div>
+              <span class="button is-inverted is-dark is-pulled-right" style="border:none; background:none;"
               @click="showModal = true"
               @mouseover="hoverDel = true"
               @mouseout="hoverDel = false">
@@ -29,7 +29,7 @@
                     <i class="fa fa-trash has-text-grey" v-else></i>
                  </span>
               </span>
-              <span class="button is-pulled-right" style="border:none;"
+              <span class="button is-pulled-right" style="border:none; background:none;"
               @click="clickedFavourite"
               @mouseover="hovering = true"
               @mouseout="hovering = false">
