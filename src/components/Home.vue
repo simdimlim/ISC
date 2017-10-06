@@ -38,8 +38,8 @@
                 </select>
               </div>
             </li>
-            <span class="checkbox" style="padding-left:0px;font-size:13px;padding-top:20px;padding-bottom:20px">
-              <input type="checkbox">
+            <span class="checkbox" style="padding-left:0px;font-size:13px;padding-top:20px;padding-bottom:20px" >
+              <input type="checkbox" v-model="showFaves">
                 Favourites Only
               </input>
             </span>
@@ -117,7 +117,8 @@ export default {
       maxPrice: '',
       category: '',
       favourite: '',
-      purchased: ''
+      purchased: '',
+      showFaves: false
     }
   },
   created: function() {
@@ -186,6 +187,19 @@ export default {
           }
         }
       }
+      
+      if (this.showFaves) {
+        var i, len, item;
+        var newList = [];
+        len = list.length;
+        for (i = 0; i < len; i++) {
+           if (list[i].favourite) {
+             newList.push(list[i]);
+          }
+        }
+        list = newList;
+     }
+      
       // filters item list by min and max prices
       var newList = [];
       if (!this.minPrice && !this.maxPrice) {
