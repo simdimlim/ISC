@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <navbar />
-    <div class="columns">
+    <div class="columns" style="">
       <div class="column">
         <aside class="menu is-hidden-touch" style="text-align:left;margin-left:25px;margin-top:50px">
           <p class="menu-label" style="margin-left:1px">Search</p>
@@ -187,8 +187,9 @@ export default {
           }
         }
       }
-      
+
       if (this.showFaves) {
+        console.log('hey')
         var i, len, item;
         var newList = [];
         len = list.length;
@@ -199,7 +200,7 @@ export default {
         }
         list = newList;
      }
-      
+
       // filters item list by min and max prices
       var newList = [];
       if (!this.minPrice && !this.maxPrice) {
