@@ -199,17 +199,17 @@ export default {
       this.itemType = 'Unfulfilled Items';
     },
     // filters item list by search text (non case sensitive)
-    filterSearch: function (list) {
+    filterSearch: function (list, itemList) {
       if (!this.searchText) {
-        list = this.currentUser.items;
+        list = itemList;
       }
       else {
         var i, len, item;
-        len = this.currentUser.items.length;
+        len = itemList.length;
         for (i = 0; i < len; i++) {
-          item = this.currentUser.items[i].title.toUpperCase()
+          item = itemList[i].title.toUpperCase()
           if (item.indexOf(this.searchText.toUpperCase()) !== -1) {
-            list.push(this.currentUser.items[i]);
+            list.push(itemList[i]);
           }
         }
       }
@@ -299,7 +299,7 @@ export default {
     // return list of items with all filters applied
     filteredItems: function () {
       var list = [];
-      list = this.filterSearch(list);
+      list = this.filterSearch(list, this.currentUser.items);
       list = this.filterFavourites(list);
       list = this.filterPrice(list);
       list = this.filterCategory(list);
