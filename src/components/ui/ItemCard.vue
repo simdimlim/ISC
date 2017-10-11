@@ -3,8 +3,8 @@
       <div class="card-image" style="height:300px;position:relative;width:100%;overflow:hidden">
          <img :src="img" style="top:0;left:0;bottom:0;right:0;margin:auto;position:absolute;z-index:0;width:100%">
       </div>
-      <div class="card-content" style="position:relative;background-color:white">
-         <div class="media">
+      <div class="card-content" style="position:relative;background-color:white;height:270px;width:100%;overflow:hidden;padding:0">
+         <div class="media" style="position:absolute;top:0;left:0;right:0;bottom:0;margin:auto;height:75%;width:80%">
             <div class="content">
                <p class="title is-4" style="font-size:19px;padding-bottom:7px">{{title}}</p>
                <p class="subtitle is-5" style="margin-bottom:10px" v-show="price">${{price}}</p>
@@ -18,7 +18,7 @@
               </a>
 
              <modal v-show="showModal" @close="showModal = false" :itemId=itemId :userId=userId></modal>
-             
+
              <div style="padding-top:24px;" v-show="category"></div>
               <span class="button is-inverted is-dark is-pulled-right" style="border:none; background:none;"
               @click="showModal = true"

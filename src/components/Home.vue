@@ -16,8 +16,25 @@
             </div>
           </ul>
           <p class="menu-label">Filter</p>
+          <ul class="menu-list" style="font-size:13px;padding-bottom:10px">
+            <li style="padding-bottom:10px">
+              <input type="radio" name="answer" v-model="itemType" value="unfulfilled">
+                Unfulfilled Items
+              </input>
+            </li>
+            <li style="padding-bottom:10px">
+              <input type="radio" name="answer" v-model="itemType" value="fulfilled">
+                Fulfilled Items
+              </input>
+            </li>
+            <li>
+              <input type="radio" name="answer" v-model="itemType" value="all">
+                All
+              </input>
+            </li>
+          </ul>
           <ul class="menu-list">
-            <li><a style="padding-left:0px;font-size:13px">Sort by Price</a></li>
+            <li><a style="padding-left:0px;font-size:13px">By Price</a></li>
             <div class="columns" style="margin-bottom:0px">
               <div class="column" style="padding-right:5px">
                 <input class="input" type="number" v-model="minPrice" placeholder="Min" style="height:30px;font-size:13px;box-shadow:none">
@@ -27,14 +44,11 @@
               </div>
             </div>
             <li>
-              <p style="padding-left:0px;font-size:13px;padding-top:10px;padding-bottom:8px">Sort by Category</p>
+              <p style="padding-left:0px;font-size:13px;padding-top:10px;padding-bottom:8px">By Category</p>
               <div class="select is-primary" style="height:30px;font-size:13px">
-                <select style="border: solid 1px #00d3d1">
+                <select v-model="category" style="border: solid 1px #00d3d1">
                   <option>None</option>
-                  <option>Option 2</option>
-                  <option>Rick</option>
-                  <option>And</option>
-                  <option>Morty</option>
+                  <option v-for="c in categories">{{ c }}</option>
                 </select>
               </div>
             </li>
@@ -43,7 +57,7 @@
                 Favourites Only
               </input>
             </span>
-            <a class="button is-primary" style="height:30px;font-size:13px;background-color:#00d3d1">Apply</a>
+            <a class="button is-primary" v-on:click="resetFilters" style="height:30px;font-size:13px;background-color:#00d3d1">Reset Filters</a>
             <br>
           </ul>
           <p class="menu-label">My Stores</p>
@@ -77,7 +91,7 @@
           </div>
         </section>
         <section class="section" style="padding-left:0;padding-top:0;height:700px" v-if="currentUser.name != ''">
-          <section class="section" v-if="showNoItems" style="text-align:left;padding-left:0;padding-top:10px;color:darkgrey">You have no saved items :(</section>
+          <section class="section" v-if="filteredItems.length == 0" style="text-align:left;padding-left:0;padding-top:10px;color:darkgrey">No items.</section>
           <div class="columns is-multiline">
             <div v-for="image in filteredItems" v-model="currentUser.items" class="column is-3">
               <itemcard :title="image.title" :price="image.price" :img="image.img" :category="image.category" :timestamp="image.timestamp" :link="image.link" :favourite="image.favourite" :itemId="image.key"
@@ -115,8 +129,20 @@ export default {
       searchText: '',
       minPrice: '',
       maxPrice: '',
+      categories: [
+        'Fashion',
+        'Technology',
+        'Electronics',
+        'Motors',
+        'Home & Garden',
+        'Sports',
+        'Health, Beauty & Baby',
+        'Toys & Media',
+        'Collectables',
+        'Other'
+      ],
+      itemType: 'unfulfilled',
       category: '',
-      favourite: '',
       purchased: '',
       showFaves: false
     }
@@ -165,15 +191,15 @@ export default {
 
       return hostname;
     },
-  },
-  computed: {
-
-    showNoItems: function() {
-      return this.filteredItems.length == 0 && this.searchText == '';
+    resetFilters: function () {
+      this.minPrice = '';
+      this.maxPrice = '';
+      this.category = '';
+      this.showFaves = false;
+      this.itemType = 'Unfulfilled Items';
     },
-    filteredItems: function () {
-      // filters item list by search text (non case sensitive)
-      var list = [];
+    // filters item list by search text (non case sensitive)
+    filterSearch: function (list) {
       if (!this.searchText) {
         list = this.currentUser.items;
       }
@@ -187,10 +213,11 @@ export default {
           }
         }
       }
-
+      return list;
+    },
+    filterFavourites: function (list) {
       if (this.showFaves) {
-        console.log('hey')
-        var i, len, item;
+        var i, len;
         var newList = [];
         len = list.length;
         for (i = 0; i < len; i++) {
@@ -198,10 +225,14 @@ export default {
              newList.push(list[i]);
           }
         }
-        list = newList;
-     }
-
-      // filters item list by min and max prices
+        return newList;
+      } else {
+        return list;
+      }
+    },
+    // filters item list by min and max prices
+    filterPrice: function (list) {
+      console.log('h')
       var newList = [];
       if (!this.minPrice && !this.maxPrice) {
         return list;
@@ -229,6 +260,51 @@ export default {
         }
         return newList;
       }
+    },
+    // filters item list by categories
+    filterCategory: function (list) {
+      var newList = [];
+      if (!this.category || this.category == 'None') {
+        return list;
+      } else {
+        var i, len, itemCat;
+        len = list.length;
+        for (i = 0; i < len; i++) {
+          itemCat = list[i].category;
+          if (itemCat === this.category) {
+            newList.push(list[i]);
+          }
+        }
+        return newList;
+      }
+    },
+    // Filter by item type
+    filterItemType: function (list) {
+      var newList = [];
+      var len = list.length;
+      for (var i = 0; i < len; i++) {
+        var purchased = list[i].purchased;
+        if (this.itemType === 'unfulfilled' && !purchased) {
+          newList.push(list[i]);
+        } else if (this.itemType === 'fulfilled' && purchased) {
+          newList.push(list[i]);
+        } else if (this.itemType === 'all') {
+          newList.push(list[i]);
+        }
+      }
+      return newList;
+    }
+  },
+  computed: {
+    // return list of items with all filters applied
+    filteredItems: function () {
+      var list = [];
+      list = this.filterSearch(list);
+      list = this.filterFavourites(list);
+      list = this.filterPrice(list);
+      list = this.filterCategory(list);
+      list = this.filterItemType(list);
+      return list;
     }
   }
 }
