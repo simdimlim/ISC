@@ -196,7 +196,7 @@ export default {
       this.maxPrice = '';
       this.category = '';
       this.showFaves = false;
-      this.itemType = 'Unfulfilled Items';
+      this.itemType = 'unfulfilled';
     },
     // filters item list by search text (non case sensitive)
     filterSearch: function (list, itemList) {
