@@ -173,6 +173,16 @@ export default {
       console.log('hey')
       if (this.sort == 'First added') this.currentUser.items.reverse();
       if (this.sort == 'Last added') this.currentUser.items.reverse();
+      if (this.sort == 'Price low to high') {
+        this.currentUser.items.sort(function(a, b) {
+            return parseFloat(a.price) - parseFloat(b.price);
+        });
+      }
+      if (this.sort == 'Price high to low') {
+        this.currentUser.items.sort(function(a, b) {
+            return parseFloat(b.price) - parseFloat(a.price);
+        });
+      }
     },
     extractHostname: function (url) {
       var hostname;
@@ -200,7 +210,7 @@ export default {
       var arrLen = splitArr.length;
 
       //extracting the root domain here
-      //if there is a subdomain 
+      //if there is a subdomain
       if (arrLen > 2) {
           name = splitArr[arrLen - 2] + '.' + splitArr[arrLen - 1];
           //check to see if it's using a Country Code Top Level Domain (ccTLD) (i.e. ".me.uk")
@@ -338,7 +348,7 @@ export default {
         }
         return newList;
       }
-      
+
     }
   },
   computed: {
