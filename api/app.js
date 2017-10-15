@@ -5,6 +5,9 @@ var bodyParser = require('body-parser')
 var probe = require('probe-image-size');
 var url = require('url');
 var sleep = require('system-sleep');
+var request = require('request');
+var cheerio = require('cheerio');
+var scraper = require('product-scraper');
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
@@ -34,16 +37,92 @@ app.get('/hey', function (req, res) {
 
 // POST method route
 app.post('/scrape', function (req, res) {
-    osmosis
-    .get(req.body.link)
-    .set({
-        title: 'title',
-        'images_src': ['img@src', 'img@data-src'],
-    })
-    .data(function(data) {
-      res.send(data);
-    }).error(console.log)
+    scraper.init(req.body.link, (scraperData) => {
+      osmosis
+        .get(req.body.link)
+        .set({
+            title: 'title',
+            'images_src': ['img@src', 'img@data-src'],
+        })
+        .data((osmosisData) => {
+          request(req.body.link, (error, response, body) => {
+            var found = false
+            var $page = cheerio.load(body),
+            text = $page("body").text();
+            text = text.replace(/\s+/g, " ")
+            var textArr = text.split(" ")
+
+            var title;
+            var info = {
+              title: '',
+              images: [],
+              price: '',
+              needFilter: false
+            }
+
+            // Get title
+            if (scraperData.title) {
+              title = scraperData.title.split(" ");
+              info.title = scraperData.title;
+            } else {
+              title = osmosisData.title.split(" ");
+              info.title = osmosisData.title;
+              info.needFilter = true;
+            }
+
+            // Get array of images
+            if (scraperData.images.length != 0) {
+              for (var i = 0; i < scraperData.images.length; i++) {
+                if (info.images.indexOf(scraperData.images[i].src) == -1) {
+                  info.images.push(scraperData.images[i].src);
+                }
+              }
+            } else {
+              info.images = osmosisData.images_src;
+            }
+
+            for (var i = 0; i < textArr.length; i++) {
+              if (found && textArr[i].indexOf('$') !== -1) {
+                console.log("..... " + textArr[i]);
+                info.price = textArr[i];
+                break;
+              }
+              else if (textArr[i] == title[0] && textArr[i+1] == title[1]) {
+                found = true;
+              }
+            }
+            console.log(info)
+            res.send(JSON.stringify(info, null))
+          })
+        }).error(console.log)
+    });
+
+    // scraper.init(req.body.link, function(data) {
+    //   console.log(data)
+    //   if (data.images == []) {
+    //     osmosis
+    //     .get(req.body.link)
+    //     .set({
+    //         title: 'title',
+    //         'images_src': ['img@src', 'img@data-src'],
+    //     })
+    //     .data(function(data) {
+    //       res.send(data);
+    //     }).error(console.log)
+    //   }
+    //   res.send(JSON.stringify(data, null))
+    // });
+    // osmosis
+    // .get(req.body.link)
+    // .set({
+    //     title: 'title',
+    //     'images_src': ['img@src', 'img@data-src'],
+    // })
+    // .data(function(data) {
+    //   res.send(data);
+    // }).error(console.log)
 })
+
 
 
 app.post('/filter', function(req, res) {

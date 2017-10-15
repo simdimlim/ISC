@@ -122,14 +122,22 @@ export default {
       })
       .then(response => {
         this.item.title = response.data.title;
-        axios.post(`http://localhost:3000/filter`, {
-          data: response.data.images_src,
-          link: this.link
-        }).then(response => {
-          this.item.images = response.data.split(" ");
-        }).catch(e => {
-          console.log(e)
-        })
+        if (response.data.needFilter) {
+          axios.post(`http://localhost:3000/filter`, {
+            data: response.data.images_src,
+            link: this.link
+          }).then(response => {
+            this.item.images = response.data.split(" ");
+          }).catch(e => {
+            console.log(e)
+          })
+        } else {
+          this.item.images = response.data.images;
+        }
+        if (response.data.price != '') {
+          this.item.price = response.data.price.replace("$", "");;
+        }
+        console.log(response.data)
       })
       .catch(e => {
         console.log(e)
@@ -249,7 +257,7 @@ b {
 }
 
 .modal-close:after, .modal-close:before {
-     margin-left: 0px; 
-     margin-top: 0px; 
+     margin-left: 0px;
+     margin-top: 0px;
 }
 </style>

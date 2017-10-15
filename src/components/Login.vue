@@ -19,7 +19,11 @@
             <div class="container">
               <div class="columns">
                 <div class="column is-8 is-offset-2">
-                  <div class="login-form">
+                  <div v-if="loading" style="color:#00d3d1">
+                    Logging In...
+                  </div>
+                  <div class="login-form" v-if="!loading">
+                    <h6 style="color:red;padding-bottom:10px" >{{errorMessage}}</h6>
                     <p class="control has-icon has-icon-right">
                       <input class="input email-input" type="text" placeholder="Email" v-model="account.email">
                       <span class="icon user" style="height:inherit;padding-top:6px">
@@ -53,22 +57,29 @@
 import "bulma/bulma.sass"
 import axios from 'axios'
 import firebase from 'firebase'
+import ThreeDots from 'vue-loading-spinner/src/components/ThreeDots'
 
 export default {
   name: 'login',
+  components: {
+    ThreeDots
+  },
   data () {
     return {
-      account: { email: '', password: '' }
+      account: { email: '', password: '' },
+      errorMessage: '',
+      loading: false
     }
   },
   methods: {
     login () {
+      this.loading = true;
       firebase.auth().signInWithEmailAndPassword(this.account.email, this.account.password).then(
         (user) => {
           this.$router.push('home')
         },
         (err) => {
-          alert('Oops. ' + err.message)
+          this.errorMessage = err.message;
         }
       );
     },

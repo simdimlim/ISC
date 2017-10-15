@@ -20,6 +20,7 @@
               <div class="columns">
                 <div class="column is-8 is-offset-2">
                   <div class="login-form">
+                    <h6 style="color:red;padding-bottom:10px" >{{errorMessage}}</h6>
                     <p class="control has-icon has-icon-right">
                       <input class="input" type="text" placeholder="First Name" v-model="account.fname">
                       <span class="icon user" style="height:inherit;padding-top:6px">
@@ -31,7 +32,7 @@
                       <span class="icon user" style="height:inherit;padding-top:6px">
                         <i class="fa fa-user"></i>
                       </span>
-                    </p>
+                    </p><br>
                     <p class="control has-icon has-icon-right">
                       <input class="input email-input" type="text" placeholder="Email" v-model="account.email">
                       <span class="icon user" style="height:inherit;padding-top:6px">
@@ -44,6 +45,12 @@
                         <i class="fa fa-lock"></i>
                       </span>
                     </p>
+                    <p class="control has-icon has-icon-right">
+                      <input class="input password-input" type="password" placeholder="Confirm Password" v-model="account.passwordConfirm">
+                      <span class="icon user" style="height:inherit;padding-top:7px">
+                        <i class="fa fa-lock"></i>
+                      </span>
+                    </p><br>
                     <p class="control login" style="text-align:center">
                         <button class="button login-btn" v-on:click="register" style="width:100%">Register Account</button>
                     </p>
@@ -71,7 +78,8 @@ export default {
   name: 'register',
   data () {
     return {
-      account: { email: '', password: '', name: '', }
+      account: { email: '', password: '', fname: '', lname: '', passwordConfirm: '' },
+      errorMessage: ''
     }
   },
   methods: {
@@ -79,6 +87,25 @@ export default {
       this.$router.replace('login')
     },
     register () {
+      if (this.account.email == '' || this.account.password == '' || this.account.fname == ''
+        || this.account.lname == '' || this.account.passwordConfirm == '') {
+        this.errorMessage = "Please fill all of the required boxes.";
+        return;
+      }
+      if (this.account.password != this.account.passwordConfirm) {
+        this.errorMessage = "Passwords do not match.";
+        return;
+      }
+      var validateEmail = function (email) {
+          var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+          return re.test(email);
+      }
+
+      if (!validateEmail(this.account.email)) {
+        this.errorMessage = "Please enter a valid email.";
+        return;
+      }
+
       firebase.auth().createUserWithEmailAndPassword(this.account.email, this.account.password).then(
         (user) => {
           var database = firebase.database();
@@ -90,7 +117,7 @@ export default {
           this.$router.replace('home')
         },
         (err) => {
-          alert('Oops. ' + err.message)
+          this.errorMessage = err.message
         }
       );
     },
