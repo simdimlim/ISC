@@ -62,10 +62,10 @@
           </ul>
           <p class="menu-label">My Stores</p>
           <ul class="menu-list" style="font-size:13px">
-            <a class="checkbox" style="padding-left: 0px">
-              <input type="checkbox">
-               Example
-            </a>
+            <li v-for="store in myStores" style="padding-bottom:10px">
+              <input type="checkbox" v-model="selectedStores" v-bind:value="store" style="padding-left: 0px">
+               {{ store }}
+            </li>
           </ul>
         </aside>
       </div>
@@ -144,6 +144,7 @@ export default {
       itemType: 'unfulfilled',
       category: '',
       purchased: '',
+      selectedStores: [],
       showFaves: false
     }
   },
@@ -191,25 +192,45 @@ export default {
 
       return hostname;
     },
+    // http://au.boohoo.com/lace-up-running-trainers-with-speckled-sole/MZZ75779.html
+    // https://www.jbhifi.com.au/computers-tablets/laptops/dell/dell-inspiron-z510835au-11-3000-2-in-1-laptop/954158/
+    extractStoreName: function (url) {
+      var name = this.extractHostname(url);
+      var splitArr = name.split('.');
+      var arrLen = splitArr.length;
+
+      //extracting the root domain here
+      //if there is a subdomain 
+      if (arrLen > 2) {
+          name = splitArr[arrLen - 2] + '.' + splitArr[arrLen - 1];
+          //check to see if it's using a Country Code Top Level Domain (ccTLD) (i.e. ".me.uk")
+          if (splitArr[arrLen - 1].length == 2 && splitArr[arrLen - 1].length == 2) {
+              //this is using a ccTLD
+              name = splitArr[arrLen - 3] + '.' + name;
+          }
+      }
+      return name;
+
+    },
     resetFilters: function () {
       this.minPrice = '';
       this.maxPrice = '';
       this.category = '';
       this.showFaves = false;
-      this.itemType = 'Unfulfilled Items';
+      this.itemType = 'unfulfilled';
     },
     // filters item list by search text (non case sensitive)
-    filterSearch: function (list) {
+    filterSearch: function (list, itemList) {
       if (!this.searchText) {
-        list = this.currentUser.items;
+        list = itemList;
       }
       else {
         var i, len, item;
-        len = this.currentUser.items.length;
+        len = itemList.length;
         for (i = 0; i < len; i++) {
-          item = this.currentUser.items[i].title.toUpperCase()
+          item = itemList[i].title.toUpperCase()
           if (item.indexOf(this.searchText.toUpperCase()) !== -1) {
-            list.push(this.currentUser.items[i]);
+            list.push(itemList[i]);
           }
         }
       }
@@ -293,18 +314,61 @@ export default {
         }
       }
       return newList;
+    },
+    filterStores: function (list) {
+      var newList = [];
+      var storeListLength = this.selectedStores.length
+      if (this.selectedStores.length == 0) {
+        return list;
+      } else {
+        var i, j, len, storeLink, listLink;
+        len = list.length;
+        for (i = 0; i < storeListLength; i++) {
+          storeLink = this.selectedStores[i];
+          for (j = 0; j < len; j ++) {
+            listLink = list[j].link;
+            if (!listLink) {
+              continue;
+            } else {
+              if (this.extractStoreName(listLink) === storeLink) {
+                newList.push(list[j]);
+              }
+            }
+          }
+        }
+        return newList;
+      }
+      
     }
   },
   computed: {
     // return list of items with all filters applied
     filteredItems: function () {
       var list = [];
-      list = this.filterSearch(list);
+      list = this.filterSearch(list, this.currentUser.items);
       list = this.filterFavourites(list);
       list = this.filterPrice(list);
       list = this.filterCategory(list);
       list = this.filterItemType(list);
+      list = this.filterStores(list);
       return list;
+    },
+    // return list of stores user has items from
+    myStores: function () {
+      var storeList = [];
+      var i, len, itemStore;
+      len = this.currentUser.items.length;
+      for (i = 0; i < len; i++) {
+        if (!this.currentUser.items[i].link) {
+          continue;
+        }
+        itemStore = this.extractStoreName(this.currentUser.items[i].link)
+        // checks if already in list
+        if (storeList.indexOf(itemStore) < 0) {
+          storeList.push(itemStore)
+        }
+      }
+      return storeList;
     }
   }
 }
