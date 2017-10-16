@@ -7,15 +7,15 @@
          <div class="media" style="position:absolute;top:0;left:0;right:0;bottom:0;padding:1px;margin-top:15px;">
             <div class="content">
                <p class="title is-4" style="font-size:14px;font-weight:200;padding-bottom:15px">{{title}}</p>
-               <p class="subtitle is-5" style="margin-bottom:10px;font-size:15px;font-weight:bold" v-show="price">${{price}}</p>
+               <p class="subtitle is-5" style="margin-bottom:10px;font-size:15px;font-weight:bold" v-show="price">${{parseFloat(price)}}</p>
 
                <div class="columns">
                  <a :href="link" target="_blank" class="button login-btn" style="width:105%;position:absolute;bottom:45px;font-size:14px;font-variant:all-small-caps">BUY AT {{host}}</a>
                </div>
               <div class="columns" style="position:absolute;width:103%;bottom:0px">
                 <div class="column" style="margin-bottom:10px">
-               <a class="button is-primary is-outlined is-pulled-left is-small" style="border:none;" v-show="category">
-                <span class="icon is-small">
+               <a class="button is-static is-outlined is-pulled-left is-small" style="border:none;color:#00d3d1" v-show="category" disabled>
+                <span class="icon is-small" style="padding-top:3px">
                   <i class="fa fa-tag"></i>
                 </span>
                 <span style="text-transform: lowercase; font-size: 13px;">{{category}}</span>

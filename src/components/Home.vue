@@ -45,9 +45,9 @@
             </div>
             <li>
               <p style="padding-left:0px;font-size:13px;padding-top:10px;padding-bottom:8px">By Category</p>
-              <div class="select is-primary" style="height:30px;font-size:13px">
+              <div class="select is-primary" style="height:30px;font-size:13px;width:100%">
                 <select v-model="category" style="border: solid 1px #00d3d1">
-                  <option>None</option>
+                  <option disabled value="">None</option>
                   <option v-for="c in categories">{{ c }}</option>
                 </select>
               </div>
@@ -61,7 +61,7 @@
             <br>
           </ul>
           <p class="menu-label">My Stores</p>
-          <ul class="menu-list" style="font-size:13px">
+          <ul class="menu-list" style="font-size:13px;height:150px;overflow:auto">
             <li v-for="store in myStores" style="padding-bottom:10px">
               <input type="checkbox" v-model="selectedStores" v-bind:value="store" style="padding-left: 0px">
                {{ store }}
