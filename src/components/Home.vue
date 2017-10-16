@@ -57,7 +57,7 @@
                 Favourites Only
               </input>
             </span>
-            <a class="button is-primary" v-on:click="resetFilters" style="height:30px;font-size:13px;background-color:#00d3d1">Reset Filters</a>
+            <a class="button is-primary" v-on:click="" style="height:30px;font-size:13px;background-color:#00d3d1">Reset Filters</a>
             <br>
           </ul>
           <p class="menu-label">My Stores</p>
@@ -84,20 +84,21 @@
               </select>
             </div>
             <p class="is-pulled-right" style="padding-right: 1%; padding-top: 0.5%;">Sort by: </p>
-            <h1 class="title" style="color:#313131;font-weight:200; text-align:left">
-              Hello {{currentUser.name}}
+            <h1 class="title" style="color:#313131;font-weight:200; text-align:left;font-size:15px;padding-top:27px;padding-bottom:1px">
+              {{ filteredItems.length }} items from {{ myStores.length }} retailers
             </h1>
-            <p class="subtitle" style="text-align:left">Welcome to your ISC!</p>
           </div>
         </section>
         <section class="section" style="padding-left:0;padding-top:0;height:700px" v-if="currentUser.name != ''">
           <section class="section" v-if="filteredItems.length == 0" style="text-align:left;padding-left:0;padding-top:10px;color:darkgrey">No items.</section>
-          <div class="columns is-multiline">
+          <div v-if="!$loadingAsyncData">
+            <div class="columns is-multiline">
             <div v-for="image in filteredItems" v-model="currentUser.items" class="column is-3">
-              <itemcard :title="image.title" :price="image.price" :img="image.img" :category="image.category" :timestamp="image.timestamp" :link="image.link" :favourite="image.favourite" :itemId="image.key"
+              <itemcard :title="image.title" :price="image.price" :img="image.img" :category="image.category" :timestamp="image.timestamp" :host="image.host" :link="image.link" :favourite="image.favourite" :itemId="image.key"
               :purchased="image.purchased"></itemcard>
             </div>
           </div>
+        </div>
         </section>
       </div>
     </div>
@@ -161,7 +162,7 @@ export default {
         var key = child.key;
         var value = child.val();
         value.key = key;
-        console.log(value)
+        value.host = this.extractStoreName(value.link)
         this.currentUser.items.unshift(value);
       });
     }, function (errorObject) {

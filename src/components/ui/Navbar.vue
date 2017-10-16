@@ -37,6 +37,7 @@
               </h1>
               <div class="columns">
                 <div class="column" style="text-align:left">
+                  <h6 style="color:red;padding-bottom:10px" >{{errorMessage}}</h6>
                   <div class="field">
                     <label class="label">Name</label>
                     <div class="control">
@@ -144,6 +145,25 @@ export default {
       })
    },
    saveItem: function() {
+     // error checking
+     if (this.item.title == '') {
+       this.errorMessage = "Please provide a title for the item.";
+       return;
+    }
+    if (this.item.price == '' || parseFloat(this.item.price) <= 0) {
+      this.errorMessage = "Please provide a price for the item.";
+      return;
+    }
+    if (this.item.category == '') {
+      this.errorMessage = "Please provide a category for the item.";
+      return;
+    }
+    if (this.pick == '') {
+      this.errorMessage = "Please select an image for the item.";
+      return;
+    }
+
+
      let user = firebase.auth().currentUser;
      var database = firebase.database();
      let userId = user.uid
@@ -200,6 +220,7 @@ export default {
      },
      showLoader: true,
      pick: '',
+     errorMessage: ''
    }
  }
 }
