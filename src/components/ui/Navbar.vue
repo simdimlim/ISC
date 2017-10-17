@@ -38,10 +38,11 @@
               <div class="columns">
                 <div class="column" style="text-align:left">
                   <h6 style="color:red;padding-bottom:10px" >{{errorMessage}}</h6>
-                  <div class="field">
+                  <div class="field" style="margin-bottom:0px">
                     <label class="label">Name</label>
-                    <div class="control">
-                      <input class="input" type="text" placeholder="" v-model="item.title">
+                    <div class="control" style="text-align:right">
+                      <input class="input" type="text" placeholder="" maxlength="65" v-model="item.title">
+                      <p style="font-size:11px;color:#7d7d7d;padding-top2px;">{{wordsLeft}} characters remaining</p>
                     </div>
                   </div>
                   <div class="field">
@@ -222,6 +223,11 @@ export default {
      showLoader: true,
      pick: '',
      errorMessage: ''
+   }
+ },
+ computed: {
+   wordsLeft: function () {
+     return 65 - this.item.title.length;
    }
  }
 }
