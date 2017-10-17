@@ -34,7 +34,7 @@
             </li>
           </ul>
           <ul class="menu-list">
-            <li><a style="padding-left:0px;font-size:13px">By Price</a></li>
+            <li style="padding-left:0px;padding-top:12px;padding-bottom:8px;font-size:13px">By Price</li>
             <div class="columns" style="margin-bottom:0px">
               <div class="column" style="padding-right:5px">
                 <input class="input" type="number" v-model="minPrice" placeholder="Min" style="height:30px;font-size:13px;box-shadow:none">
@@ -46,8 +46,8 @@
             <li>
               <p style="padding-left:0px;font-size:13px;padding-top:10px;padding-bottom:8px">By Category</p>
               <div class="select is-primary" style="height:30px;font-size:13px;width:100%">
-                <select v-model="category" style="border: solid 1px #00d3d1">
-                  <option disabled value="">None</option>
+                <select v-model="category" style="border: solid 1px #00d3d1;width:100%">
+                  <option value="">None</option>
                   <option v-for="c in categories">{{ c }}</option>
                 </select>
               </div>
@@ -90,7 +90,6 @@
           </div>
         </section>
         <section class="section" style="padding-left:0;padding-top:0;height:700px" v-if="currentUser.name != ''">
-          <section class="section" v-if="filteredItems.length == 0" style="text-align:left;padding-left:0;padding-top:10px;color:darkgrey">No items.</section>
           <div v-if="!$loadingAsyncData">
             <div class="columns is-multiline">
             <div v-for="image in filteredItems" v-model="currentUser.items" class="column is-3">
