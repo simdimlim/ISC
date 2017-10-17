@@ -4,7 +4,7 @@
     <div class="modal-card">
 
       <header class="modal-card-head">
-        <p class="modal-card-title">
+        <p class="modal-card-title" style="padding-top:25px;margin-bottom:0px">
           <center>Edit item</center>
         </p>
         <button class="delete" aria-label="close" @click="$emit('close')"></button>
@@ -30,6 +30,7 @@
           <div class="select">
             <select v-model=item.category>
               <option disabled value="">Select a category</option>
+              <option>None</option>
               <option>Fashion</option>
               <option>Motors</option>
               <option>Home & Garden</option>
@@ -44,8 +45,8 @@
         </div>
       </section>
 
-      <footer class="modal-card-foot">
-        <button class="button is-success" @click="updateItem()">Save changes</button>
+      <footer class="modal-card-foot" style="justify-content:flex-end">
+        <button class="button is-success" @click="updateItem()" style="background-color:#00d3d1">Save changes</button>
         <button class="button" @click="$emit('close')">Cancel</button>
       </footer>
 
@@ -96,7 +97,10 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .modal-card-head {
-    padding: 3px;
+    padding-top: 5px;
+    padding-left: 20px;
+    padding-bottom: 0;
+    padding-right: 20px;
     background: white;
     border: none;
 }

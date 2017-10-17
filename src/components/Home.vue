@@ -3,7 +3,7 @@
     <navbar />
     <div class="columns">
       <div class="column">
-        <aside class="menu is-hidden-touch" style="text-align:left;margin-left:25px;margin-top:50px">
+        <aside class="menu is-hidden-touch" style="text-align:left;margin-left:25px;margin-top:29px">
           <p class="menu-label" style="margin-left:1px">Search</p>
           <ul class="menu-list" style="padding-bottom:15px">
             <div class="field search-bar-field">
@@ -76,7 +76,7 @@
           </div>
           <div class="container" style="width:auto;" v-if="currentUser.name != ''">
             <div class="select is-pulled-right" style="z-index: 3;">
-              <select v-on:change="sortBy" v-model="sort">
+              <select v-on:change="sortBy" v-model="sort" style="font-weight:100">
                 <option>Popularity</option>
                 <option>First added</option>
                 <option>Last added</option>
@@ -84,7 +84,7 @@
                 <option>Price high to low</option>
               </select>
             </div>
-            <p class="is-pulled-right" style="padding-right: 1%; padding-top: 0.5%;">Sort by: </p>
+            <p class="is-pulled-right" style="padding-right: 1%; padding-top: 0.5%;font-weight:100">Sort by: </p>
             <h1 class="title num-items">
               {{ filteredItems.length }} items from {{ myStores.length }} retailers
             </h1>
@@ -490,7 +490,7 @@ export default {
   font-weight: 200;
   text-align: left;
   font-size: 15px;
-  padding-top: 27px;
-  padding-bottom: 1px;
+  padding-top: 9px;
+  padding-bottom: 15px;
 }
 </style>
