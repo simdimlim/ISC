@@ -2,8 +2,7 @@
   <div>
     <nav class="nav has-shadow" style="z-index: 950;" >
       <div class="nav-left">
-        <router-link style="padding-left:10px" class="nav-item is-brand" to="/"><b>ISC</b></router-link>
-        <router-link class="nav-item is-tab" to="/" style="color:#313131">Dashboard</router-link>
+        <router-link style="padding-left:10px" class="nav-item is-brand" to="/"><b style="font-size:20px;padding-top:2px"><i class="fa fa-shopping-bag" style="padding-right:8px;padding-top:2px" aria-hidden="true"></i>ISC</b></router-link>
       </div>
       <div class="nav-right">
         <span class="nav-item">
