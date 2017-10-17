@@ -6,7 +6,7 @@
       <div class="card-content" style="position:relative;background-color:white;height:150px;width:100%;overflow:hidden;padding:0">
          <div class="media" style="position:absolute;top:0;left:0;right:0;bottom:0;padding:1px;margin-top:15px;">
             <div class="content">
-               <p class="title is-4" style="font-size:14px;font-weight:200;padding-bottom:15px">{{timestamp}}</p>
+               <p class="title is-4" style="font-size:14px;font-weight:200;padding-bottom:15px">{{title}}</p>
                <p class="subtitle is-5" style="margin-bottom:10px;font-size:15px;font-weight:bold" v-show="price">${{parseFloat(price)}}</p>
                <div class="columns">
                  <a :href="link" target="_blank" v-on:click="clickedVisit" class="button login-btn" style="width:105%;position:absolute;bottom:45px;font-size:14px;font-variant:all-small-caps">BUY AT {{host}}</a>
