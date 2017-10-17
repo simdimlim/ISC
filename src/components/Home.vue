@@ -46,7 +46,7 @@
             <li>
               <p style="padding-left:0px;font-size:13px;padding-top:10px;padding-bottom:8px">By Category</p>
               <div class="select is-primary" style="height:30px;font-size:13px;width:100%">
-                <select v-model="category" style="border: solid 1px #00d3d1">
+                <select v-model="category" style="border: solid 1px #00d3d1;width:100%">
                   <option disabled value="">None</option>
                   <option v-for="c in categories">{{ c }}</option>
                 </select>
@@ -78,8 +78,8 @@
             <div class="select is-pulled-right" style="z-index: 3;">
               <select v-on:change="sortBy" v-model="sort">
                 <option>Popularity</option>
-                <option>Last added</option>
                 <option>First added</option>
+                <option>Last added</option>
                 <option>Price low to high</option>
                 <option>Price high to low</option>
               </select>
@@ -127,7 +127,7 @@ export default {
           items: []
       },
       myvar: '',
-      sort: 'Last added',
+      sort: 'Popularity',
       searchText: '',
       minPrice: '',
       maxPrice: '',
@@ -147,16 +147,19 @@ export default {
       category: '',
       purchased: '',
       selectedStores: [],
-      showFaves: false
+      showFaves: false,
+      originalList: []
     }
   },
   created: function() {
     var userId = firebase.auth().currentUser.uid;
     var db = firebase.database();
+
     db.ref('/users/' + userId).once('value').then((snapshot) => {
       var username = (snapshot.val() && snapshot.val().fname) || '';
       this.currentUser.name = username;
     });
+
     var ref = db.ref('/users/' + userId + '/items').on("value", (snapshot) => {
       this.currentUser.items = []
       snapshot.forEach((child) => {
@@ -165,16 +168,17 @@ export default {
         value.key = key;
         value.host = this.extractStoreName(value.link)
         this.currentUser.items.unshift(value);
+        this.originalList.unshift(value);
       });
+
     }, function (errorObject) {
       console.log("The read failed: " + errorObject.code);
     });
-    this.popularitySort();
   },
   methods: {
-    popularitySort: function() {
+    popularitySort: function(list) {
       var storeList = [];
-      var itemsLen = this.currentUser.items.length;
+      var itemsLen = list.length;
 
       // items will be sorted.
       if (itemsLen != 0) {
@@ -187,8 +191,8 @@ export default {
       // Calculate store's popularity for every stores by number of appearances
       for (var i = 0; i < itemsLen; i++) {
         var inserted = false;
-        if (this.currentUser.items[i].link) {
-          var storeName = this.extractStoreName(this.currentUser.items[i].link);
+        if (list[i].link) {
+          var storeName = this.extractStoreName(list[i].link);
           for (var j = 0; j < storeList.length; j++) {
             if (storeList[j].name == storeName) {
               storeList[j].rate++;
@@ -201,21 +205,25 @@ export default {
 
       // Calculate overall popularity (clicks + store's popularity)
       for (var i = 0; i < itemsLen; i++) {
-        var storeName = this.extractStoreName(this.currentUser.items[i].link);
-        var popularity = this.currentUser.items[i].clicks;
+        var storeName = this.extractStoreName(list[i].link);
+        var popularity = list[i].clicks;
         for (var j = 0; j < storeList.length; j++) {
           if (storeList[j].name == storeName) popularity += storeList[j].rate;
         };
       };
 
       // Sort the items by overall popularity (clicks + store's popularity)
-      this.currentUser.items.sort(function(a, b) {return b.clicks - a.clicks});
+      list.sort(function(a, b) {return b.clicks - a.clicks});
+      return list;
     },
     sortBy: function () {
-      console.log('hey')
-      if (this.sort == 'Popularity') this.popularitySort();
-      if (this.sort == 'First added') this.currentUser.items.reverse();
-      if (this.sort == 'Last added') this.currentUser.items.reverse();
+      if (this.sort == 'First added') {
+        this.currentUser.items = this.originalList.slice();
+        this.currentUser.items.reverse();
+      }
+      if (this.sort == 'Last added') {
+        this.currentUser.items = this.originalList.slice();
+      }
       if (this.sort == 'Price low to high') {
         this.currentUser.items.sort(function(a, b) {
             return parseFloat(a.price) - parseFloat(b.price);
@@ -276,8 +284,7 @@ export default {
     filterSearch: function (list, itemList) {
       if (!this.searchText) {
         list = itemList;
-      }
-      else {
+      } else {
         var i, len, item;
         len = itemList.length;
         for (i = 0; i < len; i++) {
@@ -404,6 +411,7 @@ export default {
       list = this.filterCategory(list);
       list = this.filterItemType(list);
       list = this.filterStores(list);
+      if (this.sort == 'Popularity') list = this.popularitySort(list);
       return list;
     },
     // return list of stores user has items from
