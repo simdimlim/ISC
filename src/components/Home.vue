@@ -145,7 +145,8 @@ export default {
       category: '',
       purchased: '',
       selectedStores: [],
-      showFaves: false
+      showFaves: false,
+      originalList: []
     }
   },
   created: function() {
@@ -163,6 +164,7 @@ export default {
         value.key = key;
         value.host = this.extractStoreName(value.link)
         this.currentUser.items.unshift(value);
+        this.originalList.unshift(value);
       });
     }, function (errorObject) {
       console.log("The read failed: " + errorObject.code);
@@ -170,9 +172,11 @@ export default {
   },
   methods: {
     sortBy: function () {
-      console.log('hey')
-      if (this.sort == 'First added') this.currentUser.items.reverse();
-      if (this.sort == 'Last added') this.currentUser.items.reverse();
+      if (this.sort == 'First added') this.currentUser.items = this.originalList;
+      if (this.sort == 'Last added') {
+        this.currentUser.items = this.originalList;
+        this.currentUser.items.reverse();
+      }
       if (this.sort == 'Price low to high') {
         this.currentUser.items.sort(function(a, b) {
             return parseFloat(a.price) - parseFloat(b.price);
