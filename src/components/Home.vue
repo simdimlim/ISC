@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <navbar />
-    <div class="columns" style="">
+    <div class="columns">
       <div class="column">
         <aside class="menu is-hidden-touch" style="text-align:left;margin-left:25px;margin-top:50px">
           <p class="menu-label" style="margin-left:1px">Search</p>
@@ -17,12 +17,12 @@
           </ul>
           <p class="menu-label">Filter</p>
           <ul class="menu-list" style="font-size:13px;padding-bottom:10px">
-            <li style="padding-bottom:10px">
+            <li class="filter-radio">
               <input type="radio" name="answer" v-model="itemType" value="unfulfilled">
                 Unfulfilled Items
               </input>
             </li>
-            <li style="padding-bottom:10px">
+            <li class="filter-radio">
               <input type="radio" name="answer" v-model="itemType" value="fulfilled">
                 Fulfilled Items
               </input>
@@ -37,10 +37,10 @@
             <li><a style="padding-left:0px;font-size:13px">By Price</a></li>
             <div class="columns" style="margin-bottom:0px">
               <div class="column" style="padding-right:5px">
-                <input class="input" type="number" v-model="minPrice" placeholder="Min" style="height:30px;font-size:13px;box-shadow:none">
+                <input class="input filter-price" type="number" v-model="minPrice" placeholder="Min">
               </div>
               <div class="column" style="padding-left:0">
-                <input class="input" type="number" v-model="maxPrice" placeholder="Max" style="height:30px;font-size:13px;box-shadow:none">
+                <input class="input filter-price" type="number" v-model="maxPrice" placeholder="Max">
               </div>
             </div>
             <li>
@@ -85,7 +85,7 @@
               </select>
             </div>
             <p class="is-pulled-right" style="padding-right: 1%; padding-top: 0.5%;">Sort by: </p>
-            <h1 class="title" style="color:#313131;font-weight:200; text-align:left;font-size:15px;padding-top:27px;padding-bottom:1px">
+            <h1 class="title num-items">
               {{ filteredItems.length }} items from {{ myStores.length }} retailers
             </h1>
           </div>
@@ -124,7 +124,6 @@ export default {
           photo: '',
           items: []
       },
-      myvar: '',
       sort: 'Popularity',
       searchText: '',
       minPrice: '',
@@ -150,27 +149,28 @@ export default {
     }
   },
   created: function() {
+    // Get current user ID and reference to database
     var userId = firebase.auth().currentUser.uid;
     var db = firebase.database();
 
+    // Get the name for the current user
     db.ref('/users/' + userId).once('value').then((snapshot) => {
       var username = (snapshot.val() && snapshot.val().fname) || '';
       this.currentUser.name = username;
     });
 
+    // Get the current user's items
     var ref = db.ref('/users/' + userId + '/items').on("value", (snapshot) => {
-      this.currentUser.items = []
+      this.currentUser.items = [];
       snapshot.forEach((child) => {
-        var key = child.key;
-        var value = child.val();
-        value.key = key;
-        value.host = this.extractStoreName(value.link)
-        this.currentUser.items.unshift(value);
-        this.originalList.unshift(value);
+        var item = child.val();
+        item.key = child.key;
+        item.host = this.extractStoreName(item.link)
+        this.currentUser.items.unshift(item);
+        this.originalList.push(item);
       });
 
     }, function (errorObject) {
-      console.log("The read failed: " + errorObject.code);
     });
   },
   methods: {
@@ -214,14 +214,18 @@ export default {
       list.sort(function(a, b) {return b.clicks - a.clicks});
       return list;
     },
+
     sortBy: function () {
+      // Copy across the original list which is sorted by date
       if (this.sort == 'First added') {
+        this.currentUser.items = this.originalList.slice();
+      }
+      // Copy across the original list and reverse
+      if (this.sort == 'Last added') {
         this.currentUser.items = this.originalList.slice();
         this.currentUser.items.reverse();
       }
-      if (this.sort == 'Last added') {
-        this.currentUser.items = this.originalList.slice();
-      }
+      // Sorts based on price
       if (this.sort == 'Price low to high') {
         this.currentUser.items.sort(function(a, b) {
             return parseFloat(a.price) - parseFloat(b.price);
@@ -239,8 +243,7 @@ export default {
 
       if (url.indexOf("://") > -1) {
           hostname = url.split('/')[2];
-      }
-      else {
+      } else {
           hostname = url.split('/')[0];
       }
 
@@ -311,7 +314,6 @@ export default {
     },
     // filters item list by min and max prices
     filterPrice: function (list) {
-      console.log('h')
       var newList = [];
       if (!this.minPrice && !this.maxPrice) {
         return list;
@@ -471,5 +473,24 @@ export default {
 .input:focus, .input.is-focused, .input:active, .input.is-active, .textarea:focus, .textarea.is-focused, .textarea:active, .textarea.is-active {
     border-color: #00d3d1;
     box-shadow: 0 0 0 0.125em rgba(0, 209, 178, 0.25);
+}
+
+.filter-price {
+  height: 30px;
+  font-size: 13px;
+  box-shadow: none;
+}
+
+.filter-radio {
+  padding-bottom:10px;
+}
+
+.num-items {
+  color: #313131;
+  font-weight: 200;
+  text-align: left;
+  font-size: 15px;
+  padding-top: 27px;
+  padding-bottom: 1px;
 }
 </style>

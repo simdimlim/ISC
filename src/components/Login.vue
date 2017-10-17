@@ -74,31 +74,17 @@ export default {
   methods: {
     login () {
       this.loading = true;
+      // Attempt to authorise email and password
       firebase.auth().signInWithEmailAndPassword(this.account.email, this.account.password).then(
-        (user) => {
-          this.$router.push('home')
-        },
-        (err) => {
-          this.errorMessage = err.message;
-        }
+        // Log the user in
+        (user) => { this.$router.push('home'); },
+        // Display an error message
+        (err) => { this.errorMessage = err.message; }
       );
     },
     register () {
-      this.$router.replace('register')
-    }
-  },
-  computed: {
-    submitDisable () {
-      if (this.account.email && this.account.password) {
-        return false
-      } else {
-        return true
-      }
+      this.$router.replace('register');
     }
   }
 }
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-</style>

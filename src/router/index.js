@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/components/Home'
-import NewItem from '@/components/NewItem'
 import Login from '@/components/Login'
 import Register from '@/components/Register'
 import firebase from 'firebase'
@@ -30,14 +29,6 @@ let router = new Router({
       path: '/home',
       name: 'home',
       component: Home,
-      meta: {
-        requiresAuth: true
-      }
-    },
-    {
-      path: '/new-item',
-      name: 'new',
-      component: NewItem,
       meta: {
         requiresAuth: true
       }

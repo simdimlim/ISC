@@ -87,44 +87,45 @@ export default {
       this.$router.replace('login')
     },
     register () {
+      // Make sure all input fields are filled
       if (this.account.email == '' || this.account.password == '' || this.account.fname == ''
         || this.account.lname == '' || this.account.passwordConfirm == '') {
         this.errorMessage = "Please fill all of the required boxes.";
         return;
       }
+      // Make sure password and password confirm match
       if (this.account.password != this.account.passwordConfirm) {
         this.errorMessage = "Passwords do not match.";
         return;
       }
+      // Check validity of email string
       var validateEmail = function (email) {
           var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
           return re.test(email);
       }
-
       if (!validateEmail(this.account.email)) {
         this.errorMessage = "Please enter a valid email.";
         return;
       }
 
+      // Attempt to create new user
       firebase.auth().createUserWithEmailAndPassword(this.account.email, this.account.password).then(
         (user) => {
           var database = firebase.database();
-          let userId = user.uid
+          let userId = user.uid;
+          // Set details for the user
           firebase.database().ref('users/' + userId).set({
             fname: this.account.fname,
             lname: this.account.lname,
           });
-          this.$router.replace('home')
+          this.$router.replace('home');
         },
+        // Display appropriate error message
         (err) => {
-          this.errorMessage = err.message
+          this.errorMessage = err.message;
         }
       );
     },
   },
 }
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-</style>
