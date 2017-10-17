@@ -34,7 +34,7 @@
             </li>
           </ul>
           <ul class="menu-list">
-            <li style="padding-left:0px;padding-top:12px;padding-bottom:8px;font-size:13px">By Price</li>
+            <li><a style="padding-left:0px;font-size:13px">By Price</a></li>
             <div class="columns" style="margin-bottom:0px">
               <div class="column" style="padding-right:5px">
                 <input class="input" type="number" v-model="minPrice" placeholder="Min" style="height:30px;font-size:13px;box-shadow:none">
@@ -46,8 +46,8 @@
             <li>
               <p style="padding-left:0px;font-size:13px;padding-top:10px;padding-bottom:8px">By Category</p>
               <div class="select is-primary" style="height:30px;font-size:13px;width:100%">
-                <select v-model="category" style="border: solid 1px #00d3d1;width:100%">
-                  <option value="">None</option>
+                <select v-model="category" style="border: solid 1px #00d3d1">
+                  <option disabled value="">None</option>
                   <option v-for="c in categories">{{ c }}</option>
                 </select>
               </div>
@@ -77,6 +77,7 @@
           <div class="container" style="width:auto;" v-if="currentUser.name != ''">
             <div class="select is-pulled-right" style="z-index: 3;">
               <select v-on:change="sortBy" v-model="sort">
+                <option>Popularity</option>
                 <option>Last added</option>
                 <option>First added</option>
                 <option>Price low to high</option>
@@ -90,6 +91,7 @@
           </div>
         </section>
         <section class="section" style="padding-left:0;padding-top:0;height:700px" v-if="currentUser.name != ''">
+          <section class="section" v-if="filteredItems.length == 0" style="text-align:left;padding-left:0;padding-top:10px;color:darkgrey">No items.</section>
           <div v-if="!$loadingAsyncData">
             <div class="columns is-multiline">
             <div v-for="image in filteredItems" v-model="currentUser.items" class="column is-3">
@@ -145,8 +147,7 @@ export default {
       category: '',
       purchased: '',
       selectedStores: [],
-      showFaves: false,
-      originalList: []
+      showFaves: false
     }
   },
   created: function() {
@@ -164,19 +165,57 @@ export default {
         value.key = key;
         value.host = this.extractStoreName(value.link)
         this.currentUser.items.unshift(value);
-        this.originalList.unshift(value);
       });
     }, function (errorObject) {
       console.log("The read failed: " + errorObject.code);
     });
+    this.popularitySort();
   },
   methods: {
+    popularitySort: function() {
+      var storeList = [];
+      var itemsLen = this.currentUser.items.length;
+
+      // items will be sorted.
+      if (itemsLen != 0) {
+        this.sort = 'Popularity'
+      // items will not be sorted, this.currentUser.items.length is empty.
+      } else {
+        this.sort = 'Last added';
+      };
+
+      // Calculate store's popularity for every stores by number of appearances
+      for (var i = 0; i < itemsLen; i++) {
+        var inserted = false;
+        if (this.currentUser.items[i].link) {
+          var storeName = this.extractStoreName(this.currentUser.items[i].link);
+          for (var j = 0; j < storeList.length; j++) {
+            if (storeList[j].name == storeName) {
+              storeList[j].rate++;
+              inserted = true;
+            };
+          };
+          if (!inserted) storeList.push({name:storeName, rate:1});
+        };
+      };
+
+      // Calculate overall popularity (clicks + store's popularity)
+      for (var i = 0; i < itemsLen; i++) {
+        var storeName = this.extractStoreName(this.currentUser.items[i].link);
+        var popularity = this.currentUser.items[i].clicks;
+        for (var j = 0; j < storeList.length; j++) {
+          if (storeList[j].name == storeName) popularity += storeList[j].rate;
+        };
+      };
+
+      // Sort the items by overall popularity (clicks + store's popularity)
+      this.currentUser.items.sort(function(a, b) {return b.clicks - a.clicks});
+    },
     sortBy: function () {
-      if (this.sort == 'First added') this.currentUser.items = this.originalList;
-      if (this.sort == 'Last added') {
-        this.currentUser.items = this.originalList;
-        this.currentUser.items.reverse();
-      }
+      console.log('hey')
+      if (this.sort == 'Popularity') this.popularitySort();
+      if (this.sort == 'First added') this.currentUser.items.reverse();
+      if (this.sort == 'Last added') this.currentUser.items.reverse();
       if (this.sort == 'Price low to high') {
         this.currentUser.items.sort(function(a, b) {
             return parseFloat(a.price) - parseFloat(b.price);

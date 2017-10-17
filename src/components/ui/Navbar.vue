@@ -185,7 +185,8 @@ export default {
        timestamp: currTime,
        link: this.link,
        favourite: false,
-       purchased: false
+       purchased: false,
+       clicks: 0
      }
      firebase.database().ref('users/' + userId + '/items/' + key).set(newData);
      this.showModal = false;

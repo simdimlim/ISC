@@ -32,7 +32,7 @@ import "bulma/bulma.sass"
 import firebase from 'firebase'
 
 export default {
-  name: 'modal',
+  name: 'deleteModal',
   props: ['userId', 'itemId'],
   data () {
     return {
