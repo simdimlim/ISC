@@ -13,8 +13,9 @@
       <section class="modal-card-body">
         <div class="field">
           <label class="label">Name</label>
-          <div class="control">
-            <input class="input" type="text" v-bind:placeholder=this.title v-model=item.title>
+          <div class="control"  style="text-align:right">
+            <input class="input" type="text" v-bind:placeholder=this.title maxlength="65" v-model=item.title>
+              <p style="font-size:11px;color:#7d7d7d;padding-top:2px;">{{wordsLeft}} characters remaining</p>
           </div>
         </div>
 
@@ -89,6 +90,11 @@ export default {
       firebase.database().ref('users/' + this.userId + '/items/' + this.itemId + '/price').set(this.item.price);
       firebase.database().ref('users/' + this.userId + '/items/' + this.itemId + '/category').set(this.item.category);
       this.$emit('close');
+    }
+  },
+  computed: {
+    wordsLeft: function () {
+      return 65 - this.item.title.length;
     }
   }
 }

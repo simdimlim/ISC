@@ -5,7 +5,7 @@
       <img :src="img" style="top:0;left:0;bottom:0;right:0;margin:auto;position:absolute;z-index:0;width:100%;">
     </a>
     </div>
-    <div class="card-content" style="position:relative;background-color:white;height:150px;width:100%;overflow:hidden;padding:0">
+    <div class="card-content" style="position:relative;background-color:white;height:167px;width:100%;overflow:hidden;padding:0">
       <div class="media" style="position:absolute;top:0;left:0;right:0;bottom:0;padding:1px;margin-top:15px;">
         <div class="content">
           <p class="title is-4" style="font-size:14px;font-weight:200;padding-bottom:15px">{{title}}</p>

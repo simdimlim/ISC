@@ -27,8 +27,9 @@
         <div class="modal-card" style="border-radius: 8px">
           <section class="modal-card-body">
             <div class="container" v-if="item.images.length == 0" style="width:auto">
-              <p class="loader-text" style="color:#00d3d1">Collecting details from link...</p><br>
-              <three-dots></three-dots>
+              <p v-if="!scrapingError" class="loader-text" style="color:#00d3d1">Collecting details from link...</p><br>
+              <three-dots v-if="!scrapingError"></three-dots>
+              <p v-if="scrapingError" class="loader-text" style="">We're sorry, we could not gather details from the link provided.</p><br>
             </div>
             <div class="container" v-if="item.images.length != 0" style="padding-left:20px;padding-right:20px;width:auto">
               <h1 class="title">
@@ -40,8 +41,8 @@
                   <div class="field" style="margin-bottom:0px">
                     <label class="label">Name</label>
                     <div class="control" style="text-align:right">
-                      <input class="input" type="text" placeholder="" maxlength="40" v-model="item.title">
-                      <p style="font-size:11px;color:#7d7d7d;padding-top2px;">{{wordsLeft}} characters remaining</p>
+                      <input class="input" type="text" placeholder="" maxlength="65" v-model="item.title">
+                      <p style="font-size:11px;color:#7d7d7d;padding-top:2px;">{{wordsLeft}} characters remaining</p>
                     </div>
                   </div>
                   <div class="field">
@@ -115,28 +116,23 @@ export default {
      })
    },
    addItem: function() {
+     this.errorMessage = '';
      this.showAddItem = false;
+     this.scrapingError = false;
 //     this.$router.replace({path: 'new-item', query: { url: this.link }});
       this.showModal = true;
       axios.post(`http://localhost:3000/scrape`, {
         link: this.link
       })
       .then(response => {
-        this.item.title = response.data.title;
-        if (response.data.needFilter) {
-          axios.post(`http://localhost:3000/filter`, {
-            data: response.data.images_src,
-            link: this.link
-          }).then(response => {
-            this.item.images = response.data.split(" ");
-          }).catch(e => {
-            console.log(e)
-          })
-        } else {
-          this.item.images = response.data.images;
+        if (response.data.error) {
+          this.scrapingError = true;
+          return;
         }
+        this.item.title = response.data.title;
+        this.item.images = response.data.images;
         if (response.data.price != '') {
-          this.item.price = response.data.price.replace("$", "");;
+          this.item.price = response.data.price.replace("$", "");
         }
         console.log(response.data)
       })
@@ -221,12 +217,13 @@ export default {
      },
      showLoader: true,
      pick: '',
-     errorMessage: ''
+     errorMessage: '',
+     scrapingError: false
    }
  },
  computed: {
    wordsLeft: function () {
-     return 40 - this.item.title.length;
+     return 65 - this.item.title.length;
    }
  }
 }

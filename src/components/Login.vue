@@ -39,7 +39,7 @@
                     <p class="control login" style="text-align:center">
                       <button class="button login-btn" v-on:click="login" style="width:100%">Login</button>
                       <br>or<br>
-                        <button class="button login-btn" v-on:click="register" style="width:100%">Register</button>
+                      <button class="button login-btn" v-on:click="register" style="width:100%">Register</button>
                     </p>
                   </div>
                 </div>
@@ -49,7 +49,6 @@
         </section>
       </div>
     </div>
-
   </div>
 </template>
 

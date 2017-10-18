@@ -12,123 +12,128 @@ var scraper = require('product-scraper');
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
-// GET method route
-app.get('/hey', function (req, res) {
-    osmosis
-    .get('http://www.asos.com/au/asos/asos-solo-strap-pouch-shopper-bag/prd/8481803?clr=black&cid=8730&pgesize=36&pge=0&totalstyles=834&gridsize=3&gridrow=7&gridcolumn=1')
-    .set({
-        'images_src': ['img@src'],
-        'images_datasrc': ['img@data-src']
-    })
-    .find('span')
-    .set({
-      'title':        'section > h2',
-      'description':  '#price',
-      'subcategory':  'div.breadbox > span[4]',
-      'date':         'time@datetime',
-      'latitude':     '#map@data-latitude',
-      'longitude':    '#map@data-longitude',
-      'images':       ['img@src']
-    })
-    .data(function(data) {
-        res.send(data);
-    })
-})
-
 // POST method route
 app.post('/scrape', function (req, res) {
+
+  var info = {
+    title: '',
+    images: [],
+    price: '',
+    error: false,
+  }
+
+  // Use Osmosis to get images and title from the url
+  osmosis
+  .get(req.body.link)
+  .set({
+      title: 'title',
+      'images_src': ['img@src', 'img@data-src'],
+  })
+  .data((osmosisData) => {
+
+    var scraperWorked = false;
+    console.log("1. Osmosis worked");
+
+    // Use scraper to get price
     scraper.init(req.body.link, (scraperData) => {
-      osmosis
-        .get(req.body.link)
-        .set({
-            title: 'title',
-            'images_src': ['img@src', 'img@data-src'],
-        })
-        .data((osmosisData) => {
-          request(req.body.link, (error, response, body) => {
-            var found = false
-            var $page = cheerio.load(body),
-            text = $page("body").text();
+      scraperWorked = true;
+      console.log("2. Scraper worked");
+
+      // If scraper didn't extract price use request
+      if (!scraperData.price) {
+        console.log("Price not found!!!")
+
+        request(req.body.link, (error, response, body) => {
+          console.log("3. Request worked");
+
+          // Get body of page
+          var found = false;
+          var $page = cheerio.load(body);
+          text = $page("body").text();
+          var textArr = [];
+          if (text.indexOf('Access Denied') != -1) {
+            console.log("4. Cheerio worked!")
             text = text.replace(/\s+/g, " ")
-            var textArr = text.split(" ")
+            textArr = text.split(" ")
+          } else {
+            console.log("Cheerio denied :(")
+          }
 
-            var title;
-            var info = {
-              title: '',
-              images: [],
-              price: '',
-              needFilter: false
-            }
+          // Get title from either scraper or osmosis
+          var title;
+          if (scraperData.title) title = scraperData.title.split(" ");
+          else title = osmosisData.title.split(" ");
 
-            // Get title
-            if (scraperData.title) {
-              title = scraperData.title.split(" ");
-              info.title = scraperData.title;
-            } else {
-              title = osmosisData.title.split(" ");
-              info.title = osmosisData.title;
-              info.needFilter = true;
+          // Find price in body by looking for occurrence of '$'
+          for (var i = 0; i < textArr.length; i++) {
+            if (found && textArr[i].indexOf('$') !== -1) {
+              console.log("Info price is " + textArr[i])
+              info.price = textArr[i];
+              break;
+            } else if (textArr[i] == title[0] && textArr[i+1] == title[1]) {
+              found = true;
             }
+          }
+        })
+      } else {
+        var tempPrice =  scraperData.price.replace("\n", '');
+        tempPrice = tempPrice.replace("\t", '');
+        tempPrice = tempPrice.replace("\r", '');
+        tempPrice = tempPrice.replace(" ", '');
+        tempPrice = tempPrice.replace("£", '');
+        info.price = tempPrice;
+      }
+      console.log("Sleeping")
+      sleep(5000);
+      console.log("Awakened")
 
-            // Get array of images
-            if (scraperData.images.length != 0) {
-              for (var i = 0; i < scraperData.images.length; i++) {
-                if (info.images.indexOf(scraperData.images[i].src) == -1) {
-                  info.images.push(scraperData.images[i].src);
-                }
-              }
-            } else {
-              info.images = osmosisData.images_src;
-            }
+      // Set the title
+      info.title = scraperData.title || osmosisData.title;
+      if (info.title == '') info.error = true;
 
-            for (var i = 0; i < textArr.length; i++) {
-              if (found && textArr[i].indexOf('$') !== -1) {
-                console.log("..... " + textArr[i]);
-                info.price = textArr[i];
-                break;
-              }
-              else if (textArr[i] == title[0] && textArr[i+1] == title[1]) {
-                found = true;
-              }
+      for (let i = 0; i < osmosisData.images_src.length; i++) {
+        if (osmosisData.images_src[i].charAt(0) == '/' && osmosisData.images_src[i].charAt(1) != '/') {
+          console.log(osmosisData.images_src[i]);
+          var adr = req.body.link;
+          var q = url.parse(adr, true);
+          osmosisData.images_src[i] = q.protocol + "//" + q.host + osmosisData.images_src[i];
+        } else if (osmosisData.images_src[i].charAt(0) == '/' && osmosisData.images_src[i].charAt(1) == '/') {
+          osmosisData.images_src[i] = "https:" + osmosisData.images_src[i];
+        }
+        probe(osmosisData.images_src[i], (err, result) => {
+          if (err) {
+            console.log('');
+          } else {
+            if ((result.height > 200 && result.width > 100) && (result.type != 'gif')) {
+              info.images.push(result.url)
             }
-            console.log(info)
-            res.send(JSON.stringify(info, null))
-          })
-        }).error(console.log)
+          }
+        });
+      }
+      sleep(3000)
+      console.log(info)
+      res.send(JSON.stringify(info, null))
     });
 
-    // scraper.init(req.body.link, function(data) {
-    //   console.log(data)
-    //   if (data.images == []) {
-    //     osmosis
-    //     .get(req.body.link)
-    //     .set({
-    //         title: 'title',
-    //         'images_src': ['img@src', 'img@data-src'],
-    //     })
-    //     .data(function(data) {
-    //       res.send(data);
-    //     }).error(console.log)
-    //   }
-    //   res.send(JSON.stringify(data, null))
-    // });
-    // osmosis
-    // .get(req.body.link)
-    // .set({
-    //     title: 'title',
-    //     'images_src': ['img@src', 'img@data-src'],
-    // })
-    // .data(function(data) {
-    //   res.send(data);
-    // }).error(console.log)
+    sleep(3000);
+    if (!scraperWorked) {
+      console.log("Scraper did not work!!!!!!!!!!!")
+      console.log(osmosisData)
+    }
+  }).error(console.log)
 })
 
 
 
 app.post('/filter', function(req, res) {
+  console.log('using filter........');
+  var largestHeight = 0;
+  var largestWidth = 0;
+  var largestImg = '';
   res.setHeader('Content-Type', 'text/html');
   for (let i = 0; i < req.body.data.length; i++) {
     if (req.body.data[i].charAt(0) == '/' && req.body.data[i].charAt(1) != '/') {
+      console.log(req.body.data[i])
       var adr = req.body.link;
       var q = url.parse(adr, true);
       req.body.data[i] = q.protocol + "//" + q.host + req.body.data[i];
@@ -139,7 +144,7 @@ app.post('/filter', function(req, res) {
       if (err) {
         console.log(err);
       } else {
-        if ((result.height > 200 && result.width > 100) && (result.type == 'jpg' || result.type == 'png' || result.type == 'jpeg')) {
+        if ((result.height > 200 && result.width > 100) && (result.type != 'gif')) {
           res.write(result.url + " ")
         }
       }
