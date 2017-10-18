@@ -86,7 +86,7 @@
             </div>
             <p class="is-pulled-right" style="padding-right: 1%; padding-top: 0.5%;font-weight:100">Sort by: </p>
             <h1 class="title num-items">
-              {{ filteredItems.length }} items from {{ myStores.length }} retailers
+              {{ filteredItems.length }} items from {{ numStoresFilteredList }} retailers
             </h1>
           </div>
         </section>
@@ -430,6 +430,24 @@ export default {
         }
       }
       return storeList;
+    },
+    // returns number of stores in filtered list
+    numStoresFilteredList: function () {
+      var storeList = [];
+      var i, len, itemStore;
+      len = this.filteredItems.length;
+      for (i = 0; i < len; i++) {
+        if (!this.filteredItems[i].link) {
+          continue;
+        }
+        itemStore = this.extractStoreName(this.filteredItems[i].link)
+        // checks if already in list
+        if (storeList.indexOf(itemStore) < 0) {
+          storeList.push(itemStore);
+        }
+      }
+      console.log(storeList.length);
+      return storeList.length;
     }
   }
 }
