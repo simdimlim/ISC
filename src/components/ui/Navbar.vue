@@ -129,7 +129,19 @@ export default {
           this.scrapingError = true;
           return;
         }
-        this.item.title = response.data.title;
+        if (response.data.title.length > 65) {
+          var len = response.data.title.length;
+          var titleArr = response.data.title.split(" ");
+          while (len > 65) {
+            titleArr.splice(-1, 1);
+            len = titleArr.join(" ").length;
+          }
+          var temp = titleArr.join(" ");
+          console.log(temp);
+          this.item.title = temp;
+        } else {
+          this.item.title = response.data.title;
+        }
         this.item.images = response.data.images;
         if (response.data.price != '') {
           this.item.price = response.data.price.replace("$", "");

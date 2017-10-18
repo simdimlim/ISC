@@ -110,11 +110,12 @@ app.post('/scrape', function (req, res) {
       res.send(JSON.stringify(info, null))
     });
 
-    sleep(3000);
+    sleep(5000);
     if (!scraperWorked) {
       info.error = true;
       res.send(JSON.stringify(info, null));
     }
+    sleep(1000);
     res.end();
   }).error(console.log)
 })
