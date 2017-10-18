@@ -1,7 +1,9 @@
 <template>
   <div class="card" style="box-shadow:none !important;border-bottom:1px solid lightgray">
     <div class="card-image" style="height:300px;position:relative;width:100%;overflow:hidden" @mouseover="imgHover = true" @mouseout="imgHover = false">
+      <a :href="link" target="_blank">
       <img :src="img" style="top:0;left:0;bottom:0;right:0;margin:auto;position:absolute;z-index:0;width:100%;">
+    </a>
     </div>
     <div class="card-content" style="position:relative;background-color:white;height:150px;width:100%;overflow:hidden;padding:0">
       <div class="media" style="position:absolute;top:0;left:0;right:0;bottom:0;padding:1px;margin-top:15px;">
@@ -48,7 +50,7 @@
                 <span class="icon" style="padding:1px;font-size:18px">
                   <i class="fa fa-heart has-text-danger" v-if="favourite"></i>
                   <i class="fa fa-heart-o" v-else-if="!hovering"></i>
-                  <i class="fa fa-heart-o has-text-danger" v-else></i>
+                  <i class="fa fa-heart has-text-danger" v-else></i>
                 </span>
               </span>
               <span class="button is-pulled-right is-inverted is-dark" style="border:none; background:none;"
@@ -56,10 +58,10 @@
                 @mouseout="hoverPur = false"
                 @click="markPurchased">
                 <span class="icon" style="padding:1px;font-size:18px">
-                  <i class="fa fa-check has-text-grey" v-if="hoverPur && purchased"></i>
+                  <i class="fa fa-times" v-if="hoverPur && purchased"></i>
                   <i class="fa fa-check has-text-success" v-else-if="purchased"></i>
                   <i class="fa fa-plus" v-else-if="!hoverPur"></i>
-                  <i class="fa fa-plus has-text-grey" v-else></i>
+                  <i class="fa fa-check has-text-success" v-else></i>
                 </span>
               </span>
             </div>

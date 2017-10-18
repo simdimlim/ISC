@@ -40,7 +40,7 @@
                   <div class="field" style="margin-bottom:0px">
                     <label class="label">Name</label>
                     <div class="control" style="text-align:right">
-                      <input class="input" type="text" placeholder="" maxlength="65" v-model="item.title">
+                      <input class="input" type="text" placeholder="" maxlength="40" v-model="item.title">
                       <p style="font-size:11px;color:#7d7d7d;padding-top2px;">{{wordsLeft}} characters remaining</p>
                     </div>
                   </div>
@@ -226,7 +226,7 @@ export default {
  },
  computed: {
    wordsLeft: function () {
-     return 65 - this.item.title.length;
+     return 40 - this.item.title.length;
    }
  }
 }
