@@ -4,7 +4,9 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import firebase from 'firebase'
+import VuePaginate from 'vue-paginate'
 
+Vue.use(VuePaginate)
 Vue.config.productionTip = false
 
 // Initialize Firebase

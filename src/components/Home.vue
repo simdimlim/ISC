@@ -86,18 +86,25 @@
             </div>
             <p class="is-pulled-right" style="padding-right: 1%; padding-top: 0.5%;font-weight:100">Sort by: </p>
             <h1 class="title num-items">
-              {{ filteredItems.length }} items from {{ myStores.length }} retailers
+              {{ filteredItems.length }} items from {{ numStoresFilteredList }} retailers
             </h1>
           </div>
         </section>
-        <section class="section" style="padding-left:0;padding-top:0;height:700px" v-if="currentUser.name != ''">
+        <section class="section" style="padding-left:0;padding-top:0;" v-if="currentUser.name != ''">
           <section class="section" v-if="filteredItems.length == 0" style="text-align:left;padding-left:0;padding-top:10px;color:darkgrey">No items.</section>
-            <div class="columns is-multiline">
-            <div v-for="image in filteredItems" v-model="currentUser.items" class="column is-3">
-              <itemcard :title="image.title" :price="image.price" :img="image.img" :category="image.category" :timestamp="image.timestamp" :host="image.host" :link="image.link" :favourite="image.favourite" :itemId="image.key"
-              :purchased="image.purchased"></itemcard>
+            <paginate name="items" :list="filteredItems" :per="8" class="columns is-multiline">
+              <div v-for="item in paginated('items')" v-model="currentUser.items" class="column is-3">
+                <itemcard :title="item.title" :price="item.price" :img="item.img" :category="item.category" :timestamp="item.timestamp" :host="item.host" :link="item.link" :favourite="item.favourite" :itemId="item.key"
+                  :purchased="item.purchased"></itemcard>
+              </div>
+            </paginate>
+            <div v-if="filteredItems.length > 8">
+              <paginate-links for="items" :limit="3"></paginate-links>
+              <paginate-links for="items" :simple="{
+                next: 'Next »',
+                prev: '« Back'
+              }"></paginate-links>
             </div>
-          </div>
         </section>
       </div>
     </div>
@@ -135,7 +142,7 @@ export default {
         'Motors',
         'Home & Garden',
         'Sports',
-        'Health, Beauty & Baby',
+        'Health & Beauty',
         'Toys & Media',
         'Collectables',
         'Other'
@@ -145,7 +152,8 @@ export default {
       purchased: '',
       selectedStores: [],
       showFaves: false,
-      originalList: []
+      originalList: [],
+      paginate: ['items']
     }
   },
   created: function() {
@@ -218,11 +226,13 @@ export default {
     sortBy: function () {
       // Copy across the original list which is sorted by date
       if (this.sort == 'First added') {
-        this.currentUser.items = this.originalList.slice();
+        var temp = this.originalList;
+        this.currentUser.items = temp.slice();
       }
       // Copy across the original list and reverse
       if (this.sort == 'Last added') {
-        this.currentUser.items = this.originalList.slice();
+        var temp = this.originalList;
+        this.currentUser.items = temp.slice();
         this.currentUser.items.reverse();
       }
       // Sorts based on price
@@ -430,6 +440,23 @@ export default {
         }
       }
       return storeList;
+    },
+    // returns number of stores in filtered list
+    numStoresFilteredList: function () {
+      var storeList = [];
+      var i, len, itemStore;
+      len = this.filteredItems.length;
+      for (i = 0; i < len; i++) {
+        if (!this.filteredItems[i].link) {
+          continue;
+        }
+        itemStore = this.extractStoreName(this.filteredItems[i].link)
+        // checks if already in list
+        if (storeList.indexOf(itemStore) < 0) {
+          storeList.push(itemStore);
+        }
+      }
+      return storeList.length;
     }
   }
 }

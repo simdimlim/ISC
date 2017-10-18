@@ -22,7 +22,7 @@
         <div class="field">
           <label class="label">Price ($)</label>
           <div class="control">
-            <input class="input" type="number" v-bind:placeholder=this.price v-model=item.price>
+            <input class="input" type="number" v-bind:placeholder=this.item.price v-model=item.price>
           </div>
         </div>
 
@@ -37,7 +37,7 @@
               <option>Home & Garden</option>
               <option>Electronics</option>
               <option>Sports</option>
-              <option>Health, Beauty & Baby</option>
+              <option>Health & Beauty</option>
               <option>Toys & Media</option>
               <option>Collectables</option>
               <option>Other</option>
@@ -65,12 +65,21 @@ export default {
   data () {
     return {
       item: {
-        title: this.title,
-        price: this.price,
-        category: this.category,
+        title: '',
+        price: '',
+        category: '',
       },
     }
   },
+  created: function() {
+    var db = firebase.database();
+    var ref = db.ref('users/' + this.userId + '/items/' + this.itemId);
+   ref.once('value').then((snapshot) => {
+      this.item.title = snapshot.val().title;
+      this.item.price = snapshot.val().price;
+      this.item.category = snapshot.val().category;
+   });
+},
   methods: {
     updateItem: function () {
       console.log(this.item.title);

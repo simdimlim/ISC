@@ -62,7 +62,7 @@
                           <option>Home & Garden</option>
                           <option>Electronics</option>
                           <option>Sports</option>
-                          <option>Health, Beauty & Baby</option>
+                          <option>Health & Beauty</option>
                           <option>Toys & Media</option>
                           <option>Collectables</option>
                           <option>Other</option>
