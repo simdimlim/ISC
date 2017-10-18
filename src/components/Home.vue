@@ -446,7 +446,6 @@ export default {
           storeList.push(itemStore);
         }
       }
-      console.log(storeList.length);
       return storeList.length;
     }
   }
