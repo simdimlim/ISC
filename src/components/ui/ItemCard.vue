@@ -29,7 +29,8 @@
                 @click="showDeleteModal = true"
                 @mouseover="hoverDel = true"
                 @mouseout="hoverDel = false">
-                <span class="icon" style="padding:1px;font-size:18px">
+                <span class="icon tooltip">
+                  <span class="tooltiptext" style="left:-24px">Delete</span>
                   <i class="fa fa-trash" v-if="!hoverDel"></i>
                   <i class="fa fa-trash has-text-grey" v-else></i>
                 </span>
@@ -38,7 +39,8 @@
                 @click="showEditModal = true"
                 @mouseover="hoverEdit = true"
                 @mouseout="hoverEdit = false">
-                <span class="icon" style="padding:1px;font-size:18px">
+                <span class="icon tooltip">
+                  <span class="tooltiptext" style="left:-10px">Edit</span>
                   <i class="fa fa-pencil" v-if="!hoverEdit"></i>
                   <i class="fa fa-pencil has-text-grey" v-else></i>
                 </span>
@@ -47,7 +49,8 @@
                 @click="clickedFavourite"
                 @mouseover="hovering = true"
                 @mouseout="hovering = false">
-                <span class="icon" style="padding:1px;font-size:18px">
+                <span class="icon tooltip">
+                  <span class="tooltiptext" style="left: -49px;">Add to favourites</span>
                   <i class="fa fa-heart has-text-danger" v-if="favourite"></i>
                   <i class="fa fa-heart-o" v-else-if="!hovering"></i>
                   <i class="fa fa-heart has-text-danger" v-else></i>
@@ -57,7 +60,8 @@
                 @mouseover="hoverPur = true"
                 @mouseout="hoverPur = false"
                 @click="markPurchased">
-                <span class="icon" style="padding:1px;font-size:18px">
+                <span class="icon tooltip">
+                  <span class="tooltiptext" style="left: -39.5px;">Add to fulfilled</span>
                   <i class="fa fa-times" v-if="hoverPur && purchased"></i>
                   <i class="fa fa-check has-text-success" v-else-if="purchased"></i>
                   <i class="fa fa-plus" v-else-if="!hoverPur"></i>
@@ -179,5 +183,38 @@ export default {
     text-align: center;
     white-space: nowrap;
 }
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+    padding:1px;
+    font-size:18px;
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+    bottom: 33px;
+    font-size: 14px;
+    width: auto;
+    background-color: rgba(0, 0, 0, 0.78);
+    padding-left: 10px;
+    padding-right: 10px;
+    /* Position the tooltip text - see examples below! */
+    position: absolute;
+    z-index: 1;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+}
+</style>
 
 </style>
