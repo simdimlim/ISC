@@ -23,7 +23,7 @@
               </a>
             </div>
             <div class="column is-6" style="padding:1px;position:absolute;right:4px;bottom:16px">
-              <deleteModal v-show="showDeleteModal" @close="showDeleteModal = false" :itemId=itemId :userId=userId</deleteModal>
+              <deleteModal v-show="showDeleteModal" @close="showDeleteModal = false" :itemId=itemId :userId=userId></deleteModal>
               <editModal v-show="showEditModal" @close="showEditModal = false" :itemId=itemId :userId=userId :title=title :price=price :category=category></editModal>
               <span class="button is-inverted is-dark is-pulled-right" style="border:none; background:none;"
                 @click="showDeleteModal = true"
@@ -50,7 +50,8 @@
                 @mouseover="hovering = true"
                 @mouseout="hovering = false">
                 <span class="icon tooltip">
-                  <span class="tooltiptext" style="left: -49px;">Add to favourites</span>
+                  <span class="tooltiptext" style="left: -49px;" v-if="!favourite">Add to favourites</span>
+                  <span class="tooltiptext" style="left: -75px;" v-else>Remove from favourites</span>
                   <i class="fa fa-heart has-text-danger" v-if="favourite"></i>
                   <i class="fa fa-heart-o" v-else-if="!hovering"></i>
                   <i class="fa fa-heart has-text-danger" v-else></i>
@@ -61,7 +62,8 @@
                 @mouseout="hoverPur = false"
                 @click="markPurchased">
                 <span class="icon tooltip">
-                  <span class="tooltiptext" style="left: -39.5px;">Add to fulfilled</span>
+                  <span class="tooltiptext" style="left: -39.5px;" v-if="!purchased">Add to fulfilled</span>
+                  <span class="tooltiptext" style="left: -60px;" v-else>Remove from fulfilled</span>
                   <i class="fa fa-times" v-if="hoverPur && purchased"></i>
                   <i class="fa fa-check has-text-success" v-else-if="purchased"></i>
                   <i class="fa fa-plus" v-else-if="!hoverPur"></i>
@@ -214,6 +216,10 @@ export default {
 /* Show the tooltip text when you mouse over the tooltip container */
 .tooltip:hover .tooltiptext {
     visibility: visible;
+}
+
+.button[disabled] {
+    opacity: 1;
 }
 </style>
 

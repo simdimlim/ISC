@@ -142,7 +142,7 @@ export default {
         'Motors',
         'Home & Garden',
         'Sports',
-        'Health, Beauty & Baby',
+        'Health & Beauty',
         'Toys & Media',
         'Collectables',
         'Other'
