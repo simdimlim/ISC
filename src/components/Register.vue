@@ -22,31 +22,31 @@
                   <div class="login-form">
                     <h6 style="color:red;padding-bottom:10px" >{{errorMessage}}</h6>
                     <p class="control has-icon has-icon-right">
-                      <input class="input" type="text" placeholder="First Name" v-model="account.fname">
+                      <input class="input" type="text" placeholder="First Name*" v-model="account.fname">
                       <span class="icon user" style="height:inherit;padding-top:6px">
                         <i class="fa fa-user"></i>
                       </span>
                     </p>
                     <p class="control has-icon has-icon-right">
-                      <input class="input" type="text" placeholder="Last Name" v-model="account.lname">
+                      <input class="input" type="text" placeholder="Last Name*" v-model="account.lname">
                       <span class="icon user" style="height:inherit;padding-top:6px">
                         <i class="fa fa-user"></i>
                       </span>
                     </p><br>
                     <p class="control has-icon has-icon-right">
-                      <input class="input email-input" type="text" placeholder="Email" v-model="account.email">
+                      <input class="input email-input" type="text" placeholder="Email*" v-model="account.email">
                       <span class="icon user" style="height:inherit;padding-top:6px">
                         <i class="fa fa-envelope-o"></i>
                       </span>
                     </p>
                     <p class="control has-icon has-icon-right">
-                      <input class="input password-input" type="password" placeholder="Password" v-model="account.password">
+                      <input class="input password-input" type="password" placeholder="Password*" v-model="account.password">
                       <span class="icon user" style="height:inherit;padding-top:7px">
                         <i class="fa fa-lock"></i>
                       </span>
                     </p>
                     <p class="control has-icon has-icon-right">
-                      <input class="input password-input" type="password" placeholder="Confirm Password" v-model="account.passwordConfirm">
+                      <input class="input password-input" type="password" placeholder="Confirm Password*" v-model="account.passwordConfirm">
                       <span class="icon user" style="height:inherit;padding-top:7px">
                         <i class="fa fa-lock"></i>
                       </span>

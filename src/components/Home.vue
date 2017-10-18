@@ -226,11 +226,13 @@ export default {
     sortBy: function () {
       // Copy across the original list which is sorted by date
       if (this.sort == 'First added') {
+        this.currentUser.items = [];
         var temp = this.originalList;
         this.currentUser.items = temp.slice();
       }
       // Copy across the original list and reverse
       if (this.sort == 'Last added') {
+        this.currentUser.items = [];
         var temp = this.originalList;
         this.currentUser.items = temp.slice();
         this.currentUser.items.reverse();
