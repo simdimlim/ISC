@@ -90,14 +90,21 @@
             </h1>
           </div>
         </section>
-        <section class="section" style="padding-left:0;padding-top:0;height:700px" v-if="currentUser.name != ''">
+        <section class="section" style="padding-left:0;padding-top:0;" v-if="currentUser.name != ''">
           <section class="section" v-if="filteredItems.length == 0" style="text-align:left;padding-left:0;padding-top:10px;color:darkgrey">No items.</section>
-            <div class="columns is-multiline">
-            <div v-for="image in filteredItems" v-model="currentUser.items" class="column is-3">
-              <itemcard :title="image.title" :price="image.price" :img="image.img" :category="image.category" :timestamp="image.timestamp" :host="image.host" :link="image.link" :favourite="image.favourite" :itemId="image.key"
-              :purchased="image.purchased"></itemcard>
+            <paginate name="items" :list="filteredItems" :per="8" class="columns is-multiline">
+              <div v-for="item in paginated('items')" v-model="currentUser.items" class="column is-3">
+                <itemcard :title="item.title" :price="item.price" :img="item.img" :category="item.category" :timestamp="item.timestamp" :host="item.host" :link="item.link" :favourite="item.favourite" :itemId="item.key"
+                  :purchased="item.purchased"></itemcard>
+              </div>
+            </paginate>
+            <div v-if="filteredItems.length > 8">
+              <paginate-links for="items" :limit="3"></paginate-links>
+              <paginate-links for="items" :simple="{
+                next: 'Next »',
+                prev: '« Back'
+              }"></paginate-links>
             </div>
-          </div>
         </section>
       </div>
     </div>
@@ -145,7 +152,8 @@ export default {
       purchased: '',
       selectedStores: [],
       showFaves: false,
-      originalList: []
+      originalList: [],
+      paginate: ['items']
     }
   },
   created: function() {
