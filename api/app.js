@@ -76,16 +76,11 @@ app.post('/scrape', function (req, res) {
           }
         })
       } else {
-        var tempPrice =  scraperData.price.replace("\n", '');
-        tempPrice = tempPrice.replace("\t", '');
-        tempPrice = tempPrice.replace("\r", '');
-        tempPrice = tempPrice.replace(" ", '');
-        tempPrice = tempPrice.replace("£", '');
-        info.price = tempPrice;
+        info.price = scraperData.price.replace("\n", '');
       }
-      console.log("Sleeping")
+    //  console.log("Sleeping")
       sleep(5000);
-      console.log("Awakened")
+  //    console.log("Awakened")
 
       // Set the title
       info.title = scraperData.title || osmosisData.title;
@@ -111,15 +106,16 @@ app.post('/scrape', function (req, res) {
         });
       }
       sleep(3000)
-      console.log(info)
+  //    console.log(info)
       res.send(JSON.stringify(info, null))
     });
 
     sleep(3000);
     if (!scraperWorked) {
-      console.log("Scraper did not work!!!!!!!!!!!")
-      console.log(osmosisData)
+      info.error = true;
+      res.send(JSON.stringify(info, null));
     }
+    res.end();
   }).error(console.log)
 })
 
