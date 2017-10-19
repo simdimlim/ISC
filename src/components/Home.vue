@@ -47,7 +47,6 @@
               <p style="padding-left:0px;font-size:13px;padding-top:10px;padding-bottom:8px">By Category</p>
               <div class="select is-primary" style="height:30px;font-size:13px;width:100%">
                 <select v-model="category" style="border: solid 1px #00d3d1;width:100%">
-                  <option disabled value="">None</option>
                   <option v-for="c in categories">{{ c }}</option>
                 </select>
               </div>
@@ -76,7 +75,7 @@
           </div>
           <div class="container" style="width:auto;" v-if="currentUser.name != ''">
             <div class="select is-pulled-right" style="z-index: 3;">
-              <select v-on:change="sortBy" v-model="sort" style="font-weight:100">
+              <select v-model="sort" style="font-weight:100">
                 <option>Popularity</option>
                 <option>First added</option>
                 <option>Last added</option>
@@ -136,6 +135,7 @@ export default {
       minPrice: '',
       maxPrice: '',
       categories: [
+        'None',
         'Fashion',
         'Technology',
         'Electronics',
@@ -221,33 +221,6 @@ export default {
       // Sort the items by overall popularity (clicks + store's popularity)
       list.sort(function(a, b) {return b.clicks - a.clicks});
       return list;
-    },
-
-    sortBy: function () {
-      // Copy across the original list which is sorted by date
-      if (this.sort == 'First added') {
-        this.currentUser.items = [];
-        var temp = this.originalList;
-        this.currentUser.items = temp.slice();
-      }
-      // Copy across the original list and reverse
-      if (this.sort == 'Last added') {
-        this.currentUser.items = [];
-        var temp = this.originalList;
-        this.currentUser.items = temp.slice();
-        this.currentUser.items.reverse();
-      }
-      // Sorts based on price
-      if (this.sort == 'Price low to high') {
-        this.currentUser.items.sort(function(a, b) {
-            return parseFloat(a.price) - parseFloat(b.price);
-        });
-      }
-      if (this.sort == 'Price high to low') {
-        this.currentUser.items.sort(function(a, b) {
-            return parseFloat(b.price) - parseFloat(a.price);
-        });
-      }
     },
     extractHostname: function (url) {
       var hostname;
@@ -410,8 +383,28 @@ export default {
         }
         return newList;
       }
-
-    }
+   },
+   sortBy: function(list) {
+      var temp = list;
+      
+      if (this.sort == 'First added') {
+         list = temp;
+      } else if (this.sort == 'Popularity') { 
+         list = this.popularitySort(list);
+      } else if (this.sort == 'Last added') {
+         list.reverse();
+      } else if (this.sort == 'Price low to high') {
+         list.sort(function(a, b) {
+            return parseFloat(a.price) - parseFloat(b.price);
+         });
+      } else if (this.sort == 'Price high to low') {
+         list.sort(function(a, b) {
+             return parseFloat(b.price) - parseFloat(a.price);
+         });
+      }
+      
+      return list;
+   }
   },
   computed: {
     // return list of items with all filters applied
@@ -423,7 +416,7 @@ export default {
       list = this.filterCategory(list);
       list = this.filterItemType(list);
       list = this.filterStores(list);
-      if (this.sort == 'Popularity') list = this.popularitySort(list);
+      list = this.sortBy(list);
       return list;
     },
     // return list of stores user has items from

@@ -52,7 +52,8 @@
                 <span class="icon tooltip">
                   <span class="tooltiptext" style="left: -49px;" v-if="!favourite">Add to favourites</span>
                   <span class="tooltiptext" style="left: -75px;" v-else>Remove from favourites</span>
-                  <i class="fa fa-heart has-text-danger" v-if="favourite"></i>
+                  <i class="fa fa-heart has-text-danger-hover" v-if="favourite && hovering"></i>
+                  <i class="fa fa-heart has-text-danger" v-else-if="favourite"></i>
                   <i class="fa fa-heart-o" v-else-if="!hovering"></i>
                   <i class="fa fa-heart has-text-danger" v-else></i>
                 </span>
@@ -221,6 +222,11 @@ export default {
 .button[disabled] {
     opacity: 1;
 }
+
+.has-text-danger-hover {
+    color: rgba(255, 56, 96, 0.67) !important;
+}
+
 </style>
 
 </style>
