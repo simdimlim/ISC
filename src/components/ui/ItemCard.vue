@@ -107,6 +107,7 @@ export default {
   },
   methods: {
     clickedVisit: function () {
+      this.openLink();
       var newClicks;
       let userId = firebase.auth().currentUser.uid;
       var db = firebase.database();
