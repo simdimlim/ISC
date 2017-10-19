@@ -24,7 +24,7 @@
             </div>
             <div class="column is-6" style="padding:1px;position:absolute;right:4px;bottom:16px">
               <deleteModal v-show="showDeleteModal" @close="showDeleteModal = false" :itemId=itemId :userId=userId></deleteModal>
-              <editModal v-show="showEditModal" @close="showEditModal = false" :itemId=itemId :userId=userId :title=title :price=price :category=category></editModal>
+              <editModal v-show="showEditModal" @close="showEditModal = false" :itemId=itemId :userId=userId :title=title :price=price :category=category ></editModal>
               <span class="button is-inverted is-dark is-pulled-right" style="border:none; background:none;"
                 @click="showDeleteModal = true"
                 @mouseover="hoverDel = true"
@@ -36,7 +36,7 @@
                 </span>
               </span>
               <span class="button is-inverted is-dark is-pulled-right" style="border:none; background:none;"
-                @click="showEditModal = true"
+                @click="editItem()"
                 @mouseover="hoverEdit = true"
                 @mouseout="hoverEdit = false">
                 <span class="icon tooltip">
@@ -84,6 +84,7 @@ import "bulma/bulma.sass"
 import firebase from 'firebase'
 import deleteModal from "../DeleteModal.vue"
 import editModal from "../EditModal.vue"
+import { EventBus } from '../../main.js';
 
 export default {
   name: 'itemcard',
@@ -130,7 +131,11 @@ export default {
    },
    openLink: function() {
      window.open(this.link,'_blank');
-   }
+   },
+   editItem: function() {
+     this.showEditModal = true;
+     EventBus.$emit('updateDetails');
+ }
   }
 }
 </script>

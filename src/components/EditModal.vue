@@ -14,7 +14,7 @@
         <div class="field">
           <label class="label">Name</label>
           <div class="control"  style="text-align:right">
-            <input class="input" type="text" v-bind:placeholder=this.title maxlength="65" v-model=item.title>
+            <input class="input" type="text" maxlength="65" v-model=newTitle>
               <p style="font-size:11px;color:#7d7d7d;padding-top:2px;">{{wordsLeft}} characters remaining</p>
           </div>
         </div>
@@ -22,14 +22,14 @@
         <div class="field">
           <label class="label">Price ($)</label>
           <div class="control">
-            <input class="input" type="number" v-bind:placeholder=this.item.price v-model=item.price>
+            <input class="input" type="number" v-model=newPrice>
           </div>
         </div>
 
         <div class="control">
           <label class="label">Category</label>
           <div class="select">
-            <select v-model=item.category>
+            <select v-model=newCategory>
               <option disabled value="">Select a category</option>
               <option>None</option>
               <option>Fashion</option>
@@ -58,54 +58,38 @@
 <script>
 import "bulma/bulma.sass"
 import firebase from 'firebase'
+import { EventBus } from '../main.js';
 
 export default {
   name: 'editModal',
   props: ['userId', 'itemId', 'title', 'price', 'category'],
   data () {
     return {
-      item: {
-        title: '',
-        price: '',
-        category: '',
-      },
-    }
+      newTitle: '',
+      newPrice: '',
+      newCategory: ''
+   }
   },
-  created: function() {
-    var db = firebase.database();
-    var ref = db.ref('users/' + this.userId + '/items/' + this.itemId);
-   ref.once('value').then((snapshot) => {
-      this.item.title = snapshot.val().title;
-      this.item.price = snapshot.val().price;
-      this.item.category = snapshot.val().category;
-   });
-},
   methods: {
     updateItem: function () {
-      console.log(this.item.title);
-      console.log(this.item.price);
-      console.log(this.item.category);
-      // error checking
-      if (this.item.title == '') {
-        this.item.title = this.title;
-      };
-      if (this.item.price == '' || parseFloat(this.item.price) <= 0) {
-        this.item.price = this.price;
-      };
-      if (this.item.category == '') {
-        this.item.category = "Other";
-      };
-      firebase.database().ref('users/' + this.userId + '/items/' + this.itemId + '/title').set(this.item.title);
-      firebase.database().ref('users/' + this.userId + '/items/' + this.itemId + '/price').set(this.item.price);
-      firebase.database().ref('users/' + this.userId + '/items/' + this.itemId + '/category').set(this.item.category);
+      firebase.database().ref('users/' + this.userId + '/items/' + this.itemId + '/title').set(this.newTitle);
+      firebase.database().ref('users/' + this.userId + '/items/' + this.itemId + '/price').set(this.newPrice);
+      firebase.database().ref('users/' + this.userId + '/items/' + this.itemId + '/category').set(this.newCategory);
       this.$emit('close');
-    }
+   }
   },
   computed: {
     wordsLeft: function () {
-      return 65 - this.item.title.length;
-    }
-  }
+      return 65 - this.newTitle.length;
+   }
+},
+created: function() {
+   EventBus.$on('updateDetails', () => {
+      this.newTitle = this.title; 
+      this.newPrice = this.price;
+      this.newCategory = this.category;
+   });
+}
 }
 </script>
 

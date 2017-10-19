@@ -6,6 +6,8 @@ import router from './router'
 import firebase from 'firebase'
 import VuePaginate from 'vue-paginate'
 
+export const EventBus = new Vue();
+
 Vue.use(VuePaginate)
 Vue.config.productionTip = false
 

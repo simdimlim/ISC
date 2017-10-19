@@ -47,6 +47,7 @@
               <p style="padding-left:0px;font-size:13px;padding-top:10px;padding-bottom:8px">By Category</p>
               <div class="select is-primary" style="height:30px;font-size:13px;width:100%">
                 <select v-model="category" style="border: solid 1px #00d3d1;width:100%">
+                   <option disabled value="">Select a category</option>
                   <option v-for="c in categories">{{ c }}</option>
                 </select>
               </div>
@@ -386,7 +387,6 @@ export default {
    },
    sortBy: function(list) {
       var temp = list;
-      
       if (this.sort == 'First added') {
          list = temp;
       } else if (this.sort == 'Popularity') { 
@@ -402,7 +402,6 @@ export default {
              return parseFloat(b.price) - parseFloat(a.price);
          });
       }
-      
       return list;
    }
   },
