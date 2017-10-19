@@ -11,7 +11,7 @@
           <p class="title is-4" style="font-size:14px;font-weight:200;padding-bottom:15px">{{title}}</p>
           <p class="subtitle is-5" style="margin-bottom:10px;font-size:15px;font-weight:bold" v-show="price">${{parseFloat(price)}}</p>
           <div class="columns">
-            <a :href="link" target="_blank" v-on:click="clickedVisit" class="button login-btn" style="width:105%;position:absolute;bottom:45px;font-size:14px;font-variant:all-small-caps">BUY AT {{host}}</a>
+            <a v-on:click="clickedVisit" class="button login-btn" style="width:105%;position:absolute;bottom:45px;font-size:14px;font-variant:all-small-caps">BUY AT {{host}}</a>
           </div>
           <div class="columns" style="position:absolute;width:103%;bottom:0px">
             <div class="column" style="margin-bottom:10px">
