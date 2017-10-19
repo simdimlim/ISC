@@ -266,6 +266,7 @@ export default {
       this.category = '';
       this.showFaves = false;
       this.itemType = 'unfulfilled';
+      this.selectedStores = [];
     },
     // filters item list by search text (non case sensitive)
     filterSearch: function (list, itemList) {
