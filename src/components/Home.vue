@@ -57,7 +57,7 @@
                 Favourites Only
               </input>
             </span>
-            <a class="button is-primary" v-on:click="" style="height:30px;font-size:13px;background-color:#00d3d1">Reset Filters</a>
+            <a class="button is-primary" v-on:click="resetFilters" style="height:30px;font-size:13px;background-color:#00d3d1">Reset Filters</a>
             <br>
           </ul>
           <p class="menu-label">My Stores</p>
