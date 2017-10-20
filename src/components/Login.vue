@@ -78,7 +78,7 @@ export default {
         // Log the user in
         (user) => { this.$router.push('home'); },
         // Display an error message
-        (err) => { this.errorMessage = err.message; }
+        (err) => { this.errorMessage = err.message; this.loading = false; }
       );
     },
     register () {

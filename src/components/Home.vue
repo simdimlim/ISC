@@ -389,11 +389,11 @@ export default {
    sortBy: function(list) {
       var temp = list;
       if (this.sort == 'First added') {
-         list = temp;
+         list.reverse();
       } else if (this.sort == 'Popularity') { 
          list = this.popularitySort(list);
       } else if (this.sort == 'Last added') {
-         list.reverse();
+         list = temp;
       } else if (this.sort == 'Price low to high') {
          list.sort(function(a, b) {
             return parseFloat(a.price) - parseFloat(b.price);
