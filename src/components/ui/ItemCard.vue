@@ -1,7 +1,7 @@
 <template>
   <div class="card" style="box-shadow:none !important;border-bottom:1px solid lightgray">
     <div class="card-image" style="height:300px;position:relative;width:100%;overflow:hidden" @mouseover="imgHover = true" @mouseout="imgHover = false">
-      <a :href="link" target="_blank">
+      <a v-on:click="clickedVisit">
       <img :src="img" style="top:0;left:0;bottom:0;right:0;margin:auto;position:absolute;z-index:0;width:100%;">
     </a>
     </div>
