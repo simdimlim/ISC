@@ -57,7 +57,7 @@
                 Favourites Only
               </input>
             </span>
-            <a class="button is-primary" v-on:click="resetFilters" style="height:30px;font-size:13px;background-color:#00d3d1">Reset Filters</a>
+            <a class="button is-primary" v-on:click="resetFilters" style="height:30px;font-size:13px;">Reset Filters</a>
             <br>
           </ul>
           <p class="menu-label">My Stores</p>
@@ -459,12 +459,17 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.menu-list a.is-active {
-    background-color: #00d3d1;
+
+.button.is-primary:hover, .button.is-primary.is-hovered {
+    background-color: rgba(0, 211, 209, 0.70);
+    border-color: transparent;
+    color: #fff;
 }
-.menu-list a:hover {
-    color: #00d3d1;
+
+.button.is-primary {
+   background-color: #00d3d1;
 }
+
 .add-item-btn {
   margin-right: 0px;
   background-color: #00d3d1;
