@@ -125,6 +125,8 @@ export default {
         link: this.link
       })
       .then(response => {
+        console.log(response)
+        if (!response) { console.log("yooooooo")}
         if (response.data.error) {
           this.scrapingError = true;
           return;

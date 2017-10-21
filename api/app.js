@@ -15,6 +15,7 @@ app.use(bodyParser.json())
 // POST method route
 app.post('/scrape', function (req, res) {
 
+  // Return data
   var info = {
     title: '',
     images: [],
@@ -31,12 +32,10 @@ app.post('/scrape', function (req, res) {
   })
   .data((osmosisData) => {
 
-    var scraperWorked = false;
     console.log("1. Osmosis worked");
 
     // Use scraper to get price
     scraper.init(req.body.link, (scraperData) => {
-      scraperWorked = true;
       console.log("2. Scraper worked");
 
       // If scraper didn't extract price use request
@@ -78,9 +77,6 @@ app.post('/scrape', function (req, res) {
       } else {
         info.price = scraperData.price.replace("\n", '');
       }
-    //  console.log("Sleeping")
-      sleep(5000);
-  //    console.log("Awakened")
 
       // Set the title
       info.title = scraperData.title || osmosisData.title;
@@ -105,18 +101,8 @@ app.post('/scrape', function (req, res) {
           }
         });
       }
-      sleep(3000)
-  //    console.log(info)
       res.send(JSON.stringify(info, null))
     });
-
-    sleep(5000);
-    if (!scraperWorked) {
-      info.error = true;
-      res.send(JSON.stringify(info, null));
-    }
-    sleep(1000);
-    res.end();
   }).error(console.log)
 })
 
