@@ -16,13 +16,11 @@ app.use(bodyParser.json())
 app.post('/scrape', function (req, res) {
 
   // Return data
-  var info = {
-    title: '',
-    images: [],
-    price: '',
-    error: false,
-  }
-
+    var info = {
+      title: '',
+      images: [],
+      price: ''
+    }
   // Use Osmosis to get images and title from the url
   osmosis
   .get(req.body.link)
@@ -34,76 +32,48 @@ app.post('/scrape', function (req, res) {
 
     console.log("1. Osmosis worked");
 
-    // Use scraper to get price
-    scraper.init(req.body.link, (scraperData) => {
-      console.log("2. Scraper worked");
+    request(req.body.link, (error, response, body) => {
+      console.log("2. Request worked");
 
-      // If scraper didn't extract price use request
-      if (!scraperData.price) {
-        console.log("Price not found!!!")
+      if (error) {
+        console.log("error is " + error)
+      }
 
-        request(req.body.link, (error, response, body) => {
-          console.log("3. Request worked");
+      // Get body of page
+      var found = false;
+      var $page = cheerio.load(body);
+      text = $page("body").text();
+      var textArr = [];
+      text = text.replace(/\s+/g, " ")
+      textArr = text.split(" ")
 
-          // Get body of page
-          var found = false;
-          var $page = cheerio.load(body);
-          text = $page("body").text();
-          var textArr = [];
-          if (text.indexOf('Access Denied') != -1) {
-            console.log("4. Cheerio worked!")
-            text = text.replace(/\s+/g, " ")
-            textArr = text.split(" ")
-          } else {
-            console.log("Cheerio denied :(")
-          }
-
-          // Get title from either scraper or osmosis
-          var title;
-          if (scraperData.title) title = scraperData.title.split(" ");
-          else title = osmosisData.title.split(" ");
-
-          // Find price in body by looking for occurrence of '$'
+      // Find price in body by looking for occurrence of '$'
+      if (osmosisData.title) {
+        console.log("Have found title -> " + osmosisData.title)
+        var title = osmosisData.title.split(" ");
+        if (title.length != 0) {
+          console.log("Lookin for price")
           for (var i = 0; i < textArr.length; i++) {
-            if (found && textArr[i].indexOf('$') !== -1) {
+            if (found && textArr[i].indexOf('$') !== -1 && !textArr[i].match(/[^0-9$.]/i)) {
               console.log("Info price is " + textArr[i])
               info.price = textArr[i];
+              console.log(textArr[i])
               break;
-            } else if (textArr[i] == title[0] && textArr[i+1] == title[1]) {
+            } else if (title.indexOf(textArr[i]) !== -1 && title.indexOf(textArr[i+1]) !== -1) {
               found = true;
             }
           }
-        })
-      } else {
-        info.price = scraperData.price.replace("\n", '');
-      }
-
-      // Set the title
-      info.title = scraperData.title || osmosisData.title;
-      if (info.title == '') info.error = true;
-
-      for (let i = 0; i < osmosisData.images_src.length; i++) {
-        if (osmosisData.images_src[i].charAt(0) == '/' && osmosisData.images_src[i].charAt(1) != '/') {
-          console.log(osmosisData.images_src[i]);
-          var adr = req.body.link;
-          var q = url.parse(adr, true);
-          osmosisData.images_src[i] = q.protocol + "//" + q.host + osmosisData.images_src[i];
-        } else if (osmosisData.images_src[i].charAt(0) == '/' && osmosisData.images_src[i].charAt(1) == '/') {
-          osmosisData.images_src[i] = "https:" + osmosisData.images_src[i];
         }
-        probe(osmosisData.images_src[i], (err, result) => {
-          if (err) {
-            console.log('');
-          } else {
-            if ((result.height > 200 && result.width > 100) && (result.type != 'gif')) {
-              info.images.push(result.url)
-            }
-          }
-        });
       }
+
+      // Set the title and images
+      info.title = osmosisData.title || '';
+      info.images = osmosisData.images_src;
+
       res.send(JSON.stringify(info, null))
-    });
-  }).error(console.log)
+
+    })
+  }).error(console.log);
 })
 
 
@@ -125,15 +95,16 @@ app.post('/filter', function(req, res) {
     }
     probe(req.body.data[i], (err, result) => {
       if (err) {
-        console.log(err);
+        console.log('');
       } else {
-        if ((result.height > 200 && result.width > 100) && (result.type != 'gif')) {
+        if ((result.height > 200 && result.width > 100) && (result.type != 'gif')
+          && ((2*result.width) > result.height) && ((2*result.height) > result.width)) {
           res.write(result.url + " ")
         }
       }
     });
   }
-  sleep(3000)
+  sleep(5000)
   res.end()
 })
 

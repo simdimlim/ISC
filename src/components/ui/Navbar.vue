@@ -27,9 +27,8 @@
         <div class="modal-card" style="border-radius: 8px">
           <section class="modal-card-body">
             <div class="container" v-if="item.images.length == 0" style="width:auto">
-              <p v-if="!scrapingError" class="loader-text" style="color:#00d3d1">Collecting details from link...</p><br>
-              <three-dots v-if="!scrapingError"></three-dots>
-              <p v-if="scrapingError" class="loader-text" style="">We're sorry, we could not gather details from the link provided.</p><br>
+              <p class="loader-text" style="color:#00d3d1">Collecting details from link...</p><br>
+              <three-dots></three-dots>
             </div>
             <div class="container" v-if="item.images.length != 0" style="padding-left:20px;padding-right:20px;width:auto">
               <h1 class="title">
@@ -71,14 +70,19 @@
                     </div>
                   </div>
                 </div>
-                <div class="column is-4" style="text-align:left">
+                <div class="column is-4" style="text-align:left" v-if="!scrapingError">
                   <label class="label">Image</label>
                   <div class="control">
                     <ul id="example-1" style="height:250px;overflow-y:auto;overflow-x:hidden;" class="control">
                       <li v-for="image in item.images" v-if="image != ''">
                         <div class="columns">
-                          <div class="column is-9"><img :src="image" style="width:auto"></div>
-                          <div class="column"><input type="radio" name="answer" v-model="pick" v-bind:value="image" style="position:relative;top:50%"></div>
+                          <div class="column is-9">
+                            <img :src="image" style="width:auto">
+                          </div>
+
+                          <div class="column">
+                            <input type="radio" name="answer" v-model="pick" v-bind:value="image" style="position:relative;top:50%">
+                          </div>
                         </div>
                       </li>
                     </ul>
@@ -116,6 +120,7 @@ export default {
      })
    },
    addItem: function() {
+     this.link = this.link.replace(/\s+/g, "")
      this.errorMessage = '';
      this.showAddItem = false;
      this.scrapingError = false;
@@ -125,10 +130,11 @@ export default {
         link: this.link
       })
       .then(response => {
-        console.log(response)
-        if (!response) { console.log("yooooooo")}
-        if (response.data.error) {
+        console.log(response.data)
+        if (response.data.images.length == 0 && response.data.title == '') {
           this.scrapingError = true;
+          this.errorMessage = "We could not gather any details from the link provided. Please enter the details manually."
+          this.item.images.push('');
           return;
         }
         if (response.data.title.length > 65) {
@@ -139,16 +145,31 @@ export default {
             len = titleArr.join(" ").length;
           }
           var temp = titleArr.join(" ");
-          console.log(temp);
           this.item.title = temp;
         } else {
           this.item.title = response.data.title;
         }
-        this.item.images = response.data.images;
         if (response.data.price != '') {
           this.item.price = response.data.price.replace("$", "");
+        } else {
+          this.errorMessage = "Some details could not be gathered.";
+          // do stuff
         }
-        console.log(response.data)
+        if (response.data.images.length != 0) {
+          axios.post(`http://localhost:3000/filter`, {
+            data: response.data.images,
+            link: this.link
+          }).then(response => {
+            if (response.data.length == 0) {
+              this.scrapingError = true;
+              this.item.images.push('');
+            } else {
+              this.item.images = response.data.split(" ");
+            }
+          }).catch(e => {
+            console.log(e)
+          })
+        }
       })
       .catch(e => {
         console.log(e)
@@ -156,6 +177,7 @@ export default {
    },
    saveItem: function() {
      // error checking
+
      if (this.item.title == '') {
        this.errorMessage = "Please provide a title for the item.";
        return;
@@ -168,11 +190,14 @@ export default {
       this.errorMessage = "Please provide a category for the item.";
       return;
     }
-    if (this.pick == '') {
-      this.errorMessage = "Please select an image for the item.";
-      return;
+    if (!this.scrapingError) {
+      if (this.pick == '') {
+        this.errorMessage = "Please select an image for the item.";
+        return;
+      }
+    } else {
+      this.pick = 'http://i1064.photobucket.com/albums/u362/zoeannabel/placeholder_zpsultokzij.png'
     }
-
 
      let user = firebase.auth().currentUser;
      var database = firebase.database();

@@ -3,8 +3,8 @@
     <navbar />
     <div class="columns">
       <div class="column">
-        <aside class="menu is-hidden-touch" style="text-align:left;margin-left:25px;margin-top:29px">
-          <p class="menu-label" style="margin-left:1px">Search</p>
+        <aside class="menu is-hidden-touch" style="text-align:left;margin-left:25px;margin-top:29px;font-weight:100">
+          <p class="menu-label" style="margin-left:1px;font-weight:700">Search</p>
           <ul class="menu-list" style="padding-bottom:15px">
             <div class="field search-bar-field">
               <p class="control has-icons-left">
@@ -15,7 +15,7 @@
               </p>
             </div>
           </ul>
-          <p class="menu-label">Filter</p>
+          <p class="menu-label" style="font-weight:700">Filter</p>
           <ul class="menu-list" style="font-size:13px;padding-bottom:10px">
             <li class="filter-radio">
               <input type="radio" name="answer" v-model="itemType" value="unfulfilled">
@@ -60,7 +60,7 @@
             <a class="button is-primary" v-on:click="resetFilters" style="height:30px;font-size:13px;">Reset Filters</a>
             <br>
           </ul>
-          <p class="menu-label">My Stores</p>
+          <p class="menu-label" style="font-weight:700">My Stores</p>
           <ul class="menu-list" style="font-size:13px;height:150px;overflow:auto">
             <li v-for="store in myStores" style="padding-bottom:10px">
               <input type="checkbox" v-model="selectedStores" v-bind:value="store" style="padding-left: 0px">
@@ -390,7 +390,7 @@ export default {
       var temp = list;
       if (this.sort == 'First added') {
          list.reverse();
-      } else if (this.sort == 'Popularity') { 
+      } else if (this.sort == 'Popularity') {
          list = this.popularitySort(list);
       } else if (this.sort == 'Last added') {
          list = temp;
