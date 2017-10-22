@@ -105,6 +105,7 @@
             <button class="button" v-if="currentPage != 0" @click="firstPage"><<</button>
             <button class="button" v-if="currentPage != 0" @click="prevPage">Prev</button>
             </div>
+            <div class="column" style="text-align:center;font-weight:100">Page {{currentPage}} of {{numPages}}</div>
               <div class="column" style="text-align:right">
             <button class="button" v-if="isNextPage" @click="nextPage">Next</button>
           <button class="button" v-if="isNextPage" @click="lastPage">>></button>
@@ -450,6 +451,16 @@ export default {
    },
   },
   computed: {
+    numPages: function () {
+      var i = 0;
+      var count = 0;
+      while (i < this.length) {
+        i = i + 8;
+        count++;
+      }
+      count--;
+      return count;
+    },
     currentPage: function () {
       return parseInt(this.$route.query.page);
     },
