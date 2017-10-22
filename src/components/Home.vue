@@ -102,10 +102,12 @@
             </paginate>
             <div class="columns">
               <div class="column" style="text-align:left">
+            <button class="button" v-if="currentPage != 0" @click="firstPage"><<</button>
             <button class="button" v-if="currentPage != 0" @click="prevPage">Prev</button>
             </div>
               <div class="column" style="text-align:right">
             <button class="button" v-if="isNextPage" @click="nextPage">Next</button>
+          <button class="button" v-if="isNextPage" @click="lastPage">>></button>
             </div>
             </div>
         </section>
@@ -200,6 +202,19 @@ export default {
     prevPage: function() {
       var prev = parseInt(this.$route.query.page) - 1;
       this.$router.push({ path: 'home', query: { page: prev }});
+    },
+    lastPage: function() {
+      var i = 0;
+      var count = 0;
+      while (i < this.length) {
+        i = i + 8;
+        count++;
+      }
+      count--;
+      this.$router.push({ path: 'home', query: { page: count }});
+    },
+    firstPage: function() {
+      this.$router.push({ path: 'home', query: { page: 0 }});
     },
     popularitySort: function(list) {
       var storeList = [];
@@ -440,8 +455,6 @@ export default {
     },
     isNextPage: function () {
       var amount = (parseInt(this.$route.query.page)+1)*8;
-      console.log("amount is "+amount)
-      console.log("total is " + this.length)
       return (this.filteredItems.length >= 8) && (amount < this.length);
     },
     // return list of items with all filters applied
