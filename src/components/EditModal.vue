@@ -71,6 +71,7 @@ export default {
    }
   },
   methods: {
+    // Update an item in the database
     updateItem: function () {
       firebase.database().ref('users/' + this.userId + '/items/' + this.itemId + '/title').set(this.newTitle);
       firebase.database().ref('users/' + this.userId + '/items/' + this.itemId + '/price').set(this.newPrice);
@@ -79,17 +80,18 @@ export default {
    }
   },
   computed: {
+    // Compute the number of words left for the title
     wordsLeft: function () {
       return 65 - this.newTitle.length;
    }
 },
 created: function() {
    EventBus.$on('updateDetails', () => {
-      this.newTitle = this.title; 
+      this.newTitle = this.title;
       this.newPrice = this.price;
       this.newCategory = this.category;
    });
-}
+ }
 }
 </script>
 

@@ -165,12 +165,15 @@ export default {
     }
   },
   created: function() {
+    // Redirect if no page query parameter is provided
     if (!this.$route.query.page) {
       this.$router.push({ path: 'home', query: { page: '0' }});
       location.reload();
     } else {
+
     this.currentUser.items = [];
     this.originalList = [];
+
     // Get current user ID and reference to database
     var userId = firebase.auth().currentUser.uid;
     var db = firebase.database();
@@ -196,14 +199,17 @@ export default {
   }
   },
   methods: {
+    // Go to next page of items
     nextPage: function() {
       var next = parseInt(this.$route.query.page) + 1;
       this.$router.push({ path: 'home', query: { page: next }});
     },
+    // Go to previous page of items
     prevPage: function() {
       var prev = parseInt(this.$route.query.page) - 1;
       this.$router.push({ path: 'home', query: { page: prev }});
     },
+    // Go to last page of items
     lastPage: function() {
       var i = 0;
       var count = 0;
@@ -214,9 +220,11 @@ export default {
       count--;
       this.$router.push({ path: 'home', query: { page: count }});
     },
+    // Go to first page of items
     firstPage: function() {
       this.$router.push({ path: 'home', query: { page: 0 }});
     },
+    // Sorting function based on popularity of items
     popularitySort: function(list) {
       var storeList = [];
       var itemsLen = list.length;
@@ -257,16 +265,15 @@ export default {
       list.sort(function(a, b) {return b.clicks - a.clicks});
       return list;
     },
+    // Extract the hostname for a given url
     extractHostname: function (url) {
       var hostname;
       //find & remove protocol (http, ftp, etc.) and get hostname
-
       if (url.indexOf("://") > -1) {
           hostname = url.split('/')[2];
       } else {
           hostname = url.split('/')[0];
       }
-
       //find & remove port number
       hostname = hostname.split(':')[0];
       //find & remove "?"
@@ -274,13 +281,11 @@ export default {
 
       return hostname;
     },
-    // http://au.boohoo.com/lace-up-running-trainers-with-speckled-sole/MZZ75779.html
-    // https://www.jbhifi.com.au/computers-tablets/laptops/dell/dell-inspiron-z510835au-11-3000-2-in-1-laptop/954158/
+    // Extract the store name for a given url
     extractStoreName: function (url) {
       var name = this.extractHostname(url);
       var splitArr = name.split('.');
       var arrLen = splitArr.length;
-
       //extracting the root domain here
       //if there is a subdomain
       if (arrLen > 2) {
@@ -292,7 +297,6 @@ export default {
           }
       }
       return name;
-
     },
     resetFilters: function () {
       this.minPrice = '';
@@ -302,7 +306,7 @@ export default {
       this.itemType = 'unfulfilled';
       this.selectedStores = [];
     },
-    // filters item list by search text (non case sensitive)
+    // Filters item list by search text (non case sensitive)
     filterSearch: function (list, itemList) {
       if (!this.searchText) {
         list = itemList;
@@ -319,6 +323,7 @@ export default {
       }
       return list;
     },
+    // Filter items by if they have been favourited
     filterFavourites: function (list) {
       if (this.showFaves) {
         var i, len;
@@ -397,9 +402,10 @@ export default {
       }
       return newList;
     },
+    // Filter items by which store they're from
     filterStores: function (list) {
       var newList = [];
-      var storeListLength = this.selectedStores.length
+      var storeListLength = this.selectedStores.length;
       if (this.selectedStores.length == 0) {
         return list;
       } else {
@@ -421,6 +427,7 @@ export default {
         return newList;
       }
    },
+   // Sort items by the current "sort by" filter
    sortBy: function(list) {
       var temp = list;
       if (this.sort == 'First added') {
@@ -440,17 +447,17 @@ export default {
       }
       return list;
    },
+   // Show only certain amount of items depending on page number
    showOnly: function (list) {
      var newList = [];
      var start = parseInt(this.$route.query.page)*8;
      var end = start + 8;
-     console.log(start);
-     console.log(end);
      newList = list.slice(start, end);
      return newList;
    },
   },
   computed: {
+    // Number of pages of items in total
     numPages: function () {
       var i = 0;
       var count = 0;
@@ -461,14 +468,16 @@ export default {
       count--;
       return count;
     },
+    // Current page number
     currentPage: function () {
       return parseInt(this.$route.query.page);
     },
+    // If there is a next page
     isNextPage: function () {
       var amount = (parseInt(this.$route.query.page)+1)*8;
       return (this.filteredItems.length >= 8) && (amount < this.length);
     },
-    // return list of items with all filters applied
+    // Return list of items with all filters applied
     filteredItems: function () {
       var list = [];
       list = this.filterSearch(list, this.currentUser.items);
@@ -482,7 +491,7 @@ export default {
       list = this.showOnly(list);
       return list;
     },
-    // return list of stores user has items from
+    // Return list of stores user has items from
     myStores: function () {
       var storeList = [];
       var i, len, itemStore;
@@ -499,7 +508,7 @@ export default {
       }
       return storeList;
     },
-    // returns number of stores in filtered list
+    // Returns number of stores in filtered list
     numStoresFilteredList: function () {
       var storeList = [];
       var i, len, itemStore;

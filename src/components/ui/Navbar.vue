@@ -114,6 +114,7 @@ export default {
       ThreeDots
   },
  methods: {
+  // Check if a given string is a valid URL
   ValidURL: function (str) {
      var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-\/]))?/;
      if(!regex .test(str)) {
@@ -123,6 +124,7 @@ export default {
        return true;
      }
    },
+   // Log the user out
    logout: function() {
      firebase.auth().signOut().then(() => {
        this.$router.replace('login')
@@ -138,24 +140,32 @@ export default {
      this.item.category = '';
      this.pick = '';
    },
+   // Add a new item
    addItem: function() {
      var responded = false;
+
      this.resetDetails();
+
+     // Check if valid URL
      this.link = this.link.replace(/\s+/g, "")
-     if (!this.ValidURL(this.link)) {return;}
-//     this.$router.replace({path: 'new-item', query: { url: this.link }});
+     if (!this.ValidURL(this.link)) return;
+
       this.showModal = true;
+
+      // Call the API to scrape details from the provided URL
       axios.post(`http://localhost:3000/scrape`, {
         link: this.link
       })
       .then(response => {
         responded = true;
+        // If the scraper could not find anything
         if (response.data.images.length == 0 && response.data.title == '') {
           this.scrapingError = true;
           this.errorMessage = "We could not gather any details from the link provided. Please enter the details manually."
           this.item.images.push('');
           return;
         }
+        // If the title is too long cut the title off
         if (response.data.title.length > 65) {
           var len = response.data.title.length;
           var titleArr = response.data.title.split(" ");
@@ -168,21 +178,26 @@ export default {
         } else {
           this.item.title = response.data.title;
         }
+
+        // If there is no price let the user know the price could not be scraped
         if (response.data.price != '') {
           this.item.price = response.data.price.replace("$", "");
         } else {
           this.errorMessage = "Some details could not be gathered.";
-          // do stuff
         }
+
+        // Filter images by size and type using another API call
         if (response.data.images.length != 0) {
           axios.post(`http://localhost:3000/filter`, {
             data: response.data.images,
             link: this.link
           }).then(response => {
+            // API responded with no images
             if (response.data.length == 0) {
               this.scrapingError = true;
               this.errorMessage = "Some details could not be gathered.";
               this.item.images.push('');
+            // API responded with images
             } else {
               this.item.images = response.data.split(" ");
             }
@@ -194,6 +209,7 @@ export default {
       .catch(e => {
         console.log(e)
       })
+      // Set a timeout on the API in case the request times out
       setTimeout(() => {
         if (!responded) {
           this.scrapingError = true;
@@ -202,9 +218,9 @@ export default {
         }
       }, 12000);
    },
+   // Saving the item to the database
    saveItem: function() {
      // error checking
-
      if (this.item.title == '') {
        this.errorMessage = "Please provide a title for the item.";
        return;
@@ -221,6 +237,7 @@ export default {
       this.pick = 'https://image.ibb.co/mxEr5m/Screen_Shot_2017_10_21_at_4_52_32_PM.png'
     }
 
+     // adding to the database
      let user = firebase.auth().currentUser;
      var database = firebase.database();
      let userId = user.uid
@@ -251,10 +268,10 @@ export default {
      this.showAddItem = false;
 
      this.showLoader = false;
-       this.item.images = [];
-       this.item.title = '';
-       this.item.price = 0;
-       this.item.category = '';
+     this.item.images = [];
+     this.item.title = '';
+     this.item.price = 0;
+     this.item.category = '';
    },
    closeModal: function () {
      this.showModal = false;
