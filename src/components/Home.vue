@@ -72,7 +72,9 @@
       <div class="column is-10" style="padding-left:30px;padding-right:30px">
         <section class="section" style="padding-top:20px;padding-left:0;padding-bottom:15px">
           <div class="container" style="padding-top:100px;width:auto;padding-right:268px" v-if="currentUser.name == ''">
-            <three-dots></three-dots>
+             <div  style="padding-left:25%;">
+                 <three-dots></three-dots>
+              </div>
           </div>
           <div class="container" style="width:auto;" v-if="currentUser.name != ''">
             <div class="select is-pulled-right" style="z-index: 3;">
