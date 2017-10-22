@@ -120,6 +120,7 @@ export default {
      })
    },
    addItem: function() {
+     var responded = false;
      this.link = this.link.replace(/\s+/g, "")
      this.errorMessage = '';
      this.showAddItem = false;
@@ -130,6 +131,7 @@ export default {
         link: this.link
       })
       .then(response => {
+        responded = true;
         console.log(response.data)
         if (response.data.images.length == 0 && response.data.title == '') {
           this.scrapingError = true;
@@ -174,6 +176,13 @@ export default {
       .catch(e => {
         console.log(e)
       })
+      setTimeout(() => {
+        if (!responded) {
+          this.scrapingError = true;
+          this.errorMessage = "We could not gather any details from the link provided. Please enter the details manually."
+          this.item.images.push('');
+        }
+      }, 12000);
    },
    saveItem: function() {
      // error checking
@@ -190,13 +199,8 @@ export default {
       this.errorMessage = "Please provide a category for the item.";
       return;
     }
-    if (!this.scrapingError) {
-      if (this.pick == '') {
-        this.errorMessage = "Please select an image for the item.";
-        return;
-      }
-    } else {
-      this.pick = 'http://i1064.photobucket.com/albums/u362/zoeannabel/placeholder_zpsultokzij.png'
+    if (this.pick == '') {
+      this.pick = 'https://image.ibb.co/mxEr5m/Screen_Shot_2017_10_21_at_4_52_32_PM.png'
     }
 
      let user = firebase.auth().currentUser;
