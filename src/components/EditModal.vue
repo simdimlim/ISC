@@ -84,6 +84,7 @@ export default {
    }
 },
 created: function() {
+   // when edit button is clicked, set the appropriate variables
    EventBus.$on('updateDetails', () => {
       this.newTitle = this.title; 
       this.newPrice = this.price;

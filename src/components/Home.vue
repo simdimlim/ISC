@@ -319,6 +319,7 @@ export default {
       }
       return list;
     },
+    // filter items by favourites
     filterFavourites: function (list) {
       if (this.showFaves) {
         var i, len;
@@ -397,6 +398,7 @@ export default {
       }
       return newList;
     },
+    // filter by store name
     filterStores: function (list) {
       var newList = [];
       var storeListLength = this.selectedStores.length

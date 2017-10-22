@@ -107,6 +107,7 @@ export default {
   },
   methods: {
     clickedVisit: function () {
+      // open the link before incrementing the click count
       this.openLink();
       var newClicks;
       let userId = firebase.auth().currentUser.uid;
@@ -116,21 +117,25 @@ export default {
       }, function (errorObject) {
         console.log("The read failed: " + errorObject.code);
       });
+      // increment the click count for the item
       db.ref('users/' + userId + '/items/' + this.itemId + '/clicks').set(newClicks);
     },
     clickedFavourite: function() {
+      // change favourite to opposite of current state and update in database
       var newFavourite = !this.favourite;
       this.favourite = !this.favourite;
       let userId = firebase.auth().currentUser.uid;
       firebase.database().ref('users/' + userId + '/items/' + this.itemId + '/favourite').set(newFavourite);
    },
    markPurchased: function() {
+      // change purchased to opposite of current state and update in database
       var newPurchased = !this.purchased;
       this.purchased = !this.purchased;
       let userId = firebase.auth().currentUser.uid;
       firebase.database().ref('users/' + userId + '/items/' + this.itemId + '/purchased').set(newPurchased);
    },
    openLink: function() {
+      // open link in a new tab
      window.open(this.link,'_blank');
    },
    editItem: function() {
