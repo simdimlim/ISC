@@ -162,6 +162,10 @@ export default {
     }
   },
   created: function() {
+    if (!this.$route.query.page) {
+      this.$router.push({ path: 'home', query: { page: '0' }});
+      location.reload();
+    } else {
     this.currentUser.items = [];
     this.originalList = [];
     // Get current user ID and reference to database
@@ -186,6 +190,7 @@ export default {
       });
     }, function (errorObject) {
     });
+  }
   },
   methods: {
     nextPage: function() {
@@ -286,6 +291,7 @@ export default {
       if (!this.searchText) {
         list = itemList;
       } else {
+
         var i, len, item;
         len = itemList.length;
         for (i = 0; i < len; i++) {
