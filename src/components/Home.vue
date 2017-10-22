@@ -105,7 +105,7 @@
             <button class="button" v-if="currentPage != 0" @click="firstPage"><<</button>
             <button class="button" v-if="currentPage != 0" @click="prevPage">Prev</button>
             </div>
-            <div class="column" style="text-align:center;font-weight:100">Page {{currentPage}} of {{numPages}}</div>
+            <div class="column" style="text-align:center;font-weight:100">Page {{currentPage+1}} of {{numPages+1}}</div>
               <div class="column" style="text-align:right">
             <button class="button" v-if="isNextPage" @click="nextPage">Next</button>
           <button class="button" v-if="isNextPage" @click="lastPage">>></button>
