@@ -20,7 +20,7 @@
               <div class="columns">
                 <div class="column is-8 is-offset-2">
                   <div v-if="loading" style="color:#00d3d1">
-                    Logging In...
+                    Logging in...
                   </div>
                   <div class="login-form" v-if="!loading">
                     <h6 style="color:red;padding-bottom:10px" >{{errorMessage}}</h6>
