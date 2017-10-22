@@ -71,7 +71,6 @@ app.post('/scrape', function (req, res) {
       info.images = osmosisData.images_src;
 
       res.send(JSON.stringify(info, null))
-
     })
   }).error(console.log);
 })
@@ -104,7 +103,7 @@ app.post('/filter', function(req, res) {
       }
     });
   }
-  sleep(5000)
+  sleep(6000)
   res.end()
 })
 

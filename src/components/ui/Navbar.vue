@@ -114,17 +114,35 @@ export default {
       ThreeDots
   },
  methods: {
+  ValidURL: function (str) {
+     var regex = /(http|https):\/\/(\w+:{0,1}\w*)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%!\-\/]))?/;
+     if(!regex .test(str)) {
+       alert("Please enter valid URL.");
+       return false;
+     } else {
+       return true;
+     }
+   },
    logout: function() {
      firebase.auth().signOut().then(() => {
        this.$router.replace('login')
      })
    },
+   resetDetails: function() {
+     this.errorMessage = '';
+     this.showAddItem = true;
+     this.scrapingError = false;
+     this.item.images = [];
+     this.item.title = '';
+     this.item.price = 0;
+     this.item.category = '';
+     this.pick = '';
+   },
    addItem: function() {
      var responded = false;
+     this.resetDetails();
      this.link = this.link.replace(/\s+/g, "")
-     this.errorMessage = '';
-     this.showAddItem = false;
-     this.scrapingError = false;
+     if (!this.ValidURL(this.link)) {return;}
 //     this.$router.replace({path: 'new-item', query: { url: this.link }});
       this.showModal = true;
       axios.post(`http://localhost:3000/scrape`, {
@@ -132,7 +150,6 @@ export default {
       })
       .then(response => {
         responded = true;
-        console.log(response.data)
         if (response.data.images.length == 0 && response.data.title == '') {
           this.scrapingError = true;
           this.errorMessage = "We could not gather any details from the link provided. Please enter the details manually."
@@ -164,6 +181,7 @@ export default {
           }).then(response => {
             if (response.data.length == 0) {
               this.scrapingError = true;
+              this.errorMessage = "Some details could not be gathered.";
               this.item.images.push('');
             } else {
               this.item.images = response.data.split(" ");
