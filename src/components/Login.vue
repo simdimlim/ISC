@@ -76,7 +76,7 @@ export default {
       // Attempt to authorise email and password
       firebase.auth().signInWithEmailAndPassword(this.account.email, this.account.password).then(
         // Log the user in
-        (user) => { this.$router.push('home'); },
+        (user) => { this.$router.push({ path: 'home', query: { page: '0' }}); },
         // Display an error message
         (err) => { this.errorMessage = err.message; this.loading = false; }
       );

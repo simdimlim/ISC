@@ -93,17 +93,18 @@
         <section class="section" style="padding-left:0;padding-top:0;" v-if="currentUser.name != ''">
           <section class="section" v-if="filteredItems.length == 0" style="text-align:left;padding-left:0;padding-top:10px;color:darkgrey">No items.</section>
             <paginate name="items" :list="filteredItems" :per="8" class="columns is-multiline">
-              <div v-for="item in paginated('items')" v-model="currentUser.items" class="column is-3">
+              <div v-for="item in filteredItems" v-model="currentUser.items" class="column is-3">
                 <itemcard :title="item.title" :price="item.price" :img="item.img" :category="item.category" :timestamp="item.timestamp" :host="item.host" :link="item.link" :favourite="item.favourite" :itemId="item.key"
                   :purchased="item.purchased"></itemcard>
               </div>
             </paginate>
-            <div v-if="filteredItems.length > 8">
-              <paginate-links for="items" :limit="3"></paginate-links>
-              <paginate-links for="items" :simple="{
-                next: 'Next »',
-                prev: '« Back'
-              }"></paginate-links>
+            <div class="columns">
+              <div class="column" style="text-align:left">
+            <button class="button" v-if="currentPage != 0" @click="prevPage">Prev</button>
+            </div>
+              <div class="column" style="text-align:right">
+            <button class="button" v-if="isNextPage" @click="nextPage">Next</button>
+            </div>
             </div>
         </section>
       </div>
@@ -154,10 +155,13 @@ export default {
       selectedStores: [],
       showFaves: false,
       originalList: [],
-      paginate: ['items']
+      paginate: ['items'],
+      length: 0
     }
   },
   created: function() {
+    this.currentUser.items = [];
+    this.originalList = [];
     // Get current user ID and reference to database
     var userId = firebase.auth().currentUser.uid;
     var db = firebase.database();
@@ -178,11 +182,18 @@ export default {
         this.currentUser.items.unshift(item);
         this.originalList.push(item);
       });
-
     }, function (errorObject) {
     });
   },
   methods: {
+    nextPage: function() {
+      var next = parseInt(this.$route.query.page) + 1;
+      this.$router.push({ path: 'home', query: { page: next }});
+    },
+    prevPage: function() {
+      var prev = parseInt(this.$route.query.page) - 1;
+      this.$router.push({ path: 'home', query: { page: prev }});
+    },
     popularitySort: function(list) {
       var storeList = [];
       var itemsLen = list.length;
@@ -404,9 +415,27 @@ export default {
          });
       }
       return list;
-   }
+   },
+   showOnly: function (list) {
+     var newList = [];
+     var start = parseInt(this.$route.query.page)*8;
+     var end = start + 8;
+     console.log(start);
+     console.log(end);
+     newList = list.slice(start, end);
+     return newList;
+   },
   },
   computed: {
+    currentPage: function () {
+      return parseInt(this.$route.query.page);
+    },
+    isNextPage: function () {
+      var amount = (parseInt(this.$route.query.page)+1)*8;
+      console.log("amount is "+amount)
+      console.log("total is " + this.length)
+      return (this.filteredItems.length >= 8) && (amount < this.length);
+    },
     // return list of items with all filters applied
     filteredItems: function () {
       var list = [];
@@ -417,6 +446,8 @@ export default {
       list = this.filterItemType(list);
       list = this.filterStores(list);
       list = this.sortBy(list);
+      this.length = list.length;
+      list = this.showOnly(list);
       return list;
     },
     // return list of stores user has items from
