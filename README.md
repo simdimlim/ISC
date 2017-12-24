@@ -1,4 +1,4 @@
-# ethicsproject
+# Integrated Shopping Cart
 
 > A Vue.js project
 
