@@ -19,12 +19,12 @@
           <ul class="menu-list" style="font-size:13px;padding-bottom:10px">
             <li class="filter-radio">
               <input type="radio" name="answer" v-model="itemType" value="unfulfilled">
-                Unfulfilled Items
+                Unpurchased Items
               </input>
             </li>
             <li class="filter-radio">
               <input type="radio" name="answer" v-model="itemType" value="fulfilled">
-                Fulfilled Items
+                Purchased Items
               </input>
             </li>
             <li>

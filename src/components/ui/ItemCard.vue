@@ -63,8 +63,8 @@
                 @mouseout="hoverPur = false"
                 @click="markPurchased">
                 <span class="icon tooltip">
-                  <span class="tooltiptext" style="left: -39.5px;" v-if="!purchased">Add to fulfilled</span>
-                  <span class="tooltiptext" style="left: -60px;" v-else>Remove from fulfilled</span>
+                  <span class="tooltiptext" style="left: -39.5px;" v-if="!purchased">Mark as purchased</span>
+                  <span class="tooltiptext" style="left: -60px;" v-else>Remove from purchased</span>
                   <i class="fa fa-times" v-if="hoverPur && purchased"></i>
                   <i class="fa fa-check has-text-success" v-else-if="purchased"></i>
                   <i class="fa fa-plus" v-else-if="!hoverPur"></i>
